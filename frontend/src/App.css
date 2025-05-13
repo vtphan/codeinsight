@@ -1,0 +1,299 @@
+/* src/App.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --primary-color: #2563eb;
+  --primary-hover: #1e40af;
+  --secondary-color: #475569;
+  --background-color: #f8fafc;
+  --card-background: #ffffff;
+  --text-color: #1e293b;
+  --border-color: #e2e8f0;
+  --success-color: #22c55e;
+  --warning-color: #f59e0b;
+  --danger-color: #ef4444;
+  --info-color: #3b82f6;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  background-color: var(--card-background);
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 50px; /* Set a fixed height for consistency */
+}
+
+
+.app-header h1 {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+}
+.app-header h2, h3 {
+  color: var(--primary-color);
+}
+
+.app-nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.app-nav button {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.app-nav button:hover {
+  background-color: var(--background-color);
+}
+
+.app-nav button.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.app-content {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  margin-top: 70px;
+}
+/* Common component styles */
+.card {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.code-block {
+  background-color: #f1f5f9;
+  border-radius: 6px;
+  padding: 1rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+
+/* Performance levels colors */
+.performance-poor {
+  color: var(--danger-color);
+}
+
+.performance-struggling {
+  color: var(--warning-color);
+}
+
+.performance-good-progress {
+  color: var(--info-color);
+}
+
+.performance-strong {
+  color: var(--success-color);
+}
+
+/* Expandable sections */
+.expandable {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.expandable-header {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  background-color: #f8fafc;
+}
+
+.expandable-content {
+  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Screen queue styles */
+.screen-queue {
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.screen-queue-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.screen-queue-item:last-child {
+  border-bottom: none;
+}
+
+.queue-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Presentation mode */
+.presentation-mode {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  z-index: 1000;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.presentation-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.presentation-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
+.presentation-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+/* Two-column layout for Analyze view */
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+/* Performance level indicators */
+.performance-strong {
+  color: #22c55e; /* Green */
+}
+
+.performance-good {
+  color: #3b82f6; /* Blue */
+}
+
+.performance-struggling {
+  color: #f59e0b; /* Amber */
+}
+
+.performance-poor {
+  color: #ef4444; /* Red */
+}
+
+/* Modal styles for transitions */
+.modal-overlay {
+  transition: opacity 0.2s ease-in-out;
+}
+
+.modal-content {
+  transition: transform 0.2s ease-in-out;
+  animation: modal-appear 0.2s;
+}
+
+@keyframes modal-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .two-column {
+    grid-template-columns: 1fr;
+  }
+
+  .app-header {
+    height: auto;
+    padding: 0.75rem 1.5rem;
+    flex-direction: column;
+  }
+
+  .app-content {
+    margin-top: 120px;
+  }
+}

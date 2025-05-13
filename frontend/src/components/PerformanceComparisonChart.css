@@ -1,0 +1,32 @@
+/* src/components/PerformanceComparisonChart.css */
+
+.performance-comparison-chart {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .chart-container {
+    flex-grow: 1;
+    width: 100%;
+    position: relative;
+  }
+  
+  .chart-summary {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    color: var(--secondary-color);
+  }
+  
+  @media (max-width: 768px) {
+    .chart-summary {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .chart-summary strong {
+      margin-right: 0.5rem;
+    }
+  }

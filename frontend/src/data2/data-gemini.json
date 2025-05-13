@@ -1,0 +1,296 @@
+{
+  "problem_summary": {
+    "title": "Find Maximum Difference in a List without built-in min/max"
+  },
+  "overall_assessment": {
+    "total_entries": 30,
+    "performance_distribution": {
+      "poor": {
+        "count": 5,
+        "percentage": "16.67%"
+      },
+      "struggling": {
+        "count": 23,
+        "percentage": "76.67%"
+      },
+      "good_progress": {
+        "count": 2,
+        "percentage": "6.67%"
+      },
+      "strong": {
+        "count": 0,
+        "percentage": "0.00%"
+      }
+    }
+  },
+  "individual_assessment": [
+    { "student_id": 1, "performance_level": "Struggling" },
+    { "student_id": 2, "performance_level": "Struggling" },
+    { "student_id": 3, "performance_level": "Struggling" },
+    { "student_id": 4, "performance_level": "Poor" },
+    { "student_id": 5, "performance_level": "Struggling" },
+    { "student_id": 6, "performance_level": "Struggling" },
+    { "student_id": 7, "performance_level": "Struggling" },
+    { "student_id": 8, "performance_level": "Struggling" },
+    { "student_id": 9, "performance_level": "Struggling" },
+    { "student_id": 10, "performance_level": "Struggling" },
+    { "student_id": 11, "performance_level": "Struggling" },
+    { "student_id": 12, "performance_level": "Struggling" },
+    { "student_id": 13, "performance_level": "Struggling" },
+    { "student_id": 14, "performance_level": "Struggling" },
+    { "student_id": 15, "performance_level": "Poor" },
+    { "student_id": 16, "performance_level": "Struggling" },
+    { "student_id": 17, "performance_level": "Poor" },
+    { "student_id": 18, "performance_level": "Struggling" },
+    { "student_id": 19, "performance_level": "Struggling" },
+    { "student_id": 20, "performance_level": "Good Progress" },
+    { "student_id": 21, "performance_level": "Struggling" },
+    { "student_id": 22, "performance_level": "Struggling" },
+    { "student_id": 23, "performance_level": "Struggling" },
+    { "student_id": 24, "performance_level": "Good Progress" },
+    { "student_id": 25, "performance_level": "Struggling" },
+    { "student_id": 26, "performance_level": "Poor" },
+    { "student_id": 27, "performance_level": "Struggling" },
+    { "student_id": 28, "performance_level": "Struggling" },
+    { "student_id": 29, "performance_level": "Poor" },
+    { "student_id": 30, "performance_level": "Struggling" }
+  ],
+  "aggregate_analysis": {
+    "top_errors": [
+      {
+        "category": "Logic Error",
+        "occurrence_count": 16,
+        "occurrence_percentage": "57.14%",
+        "description": "Code contains flawed logic, such as failing to update min/max variables correctly within the loop, using incorrect comparison logic, returning the wrong value (e.g., only max, zero, a tuple), or reversing the final subtraction.",
+        "example_code": [
+          "# Student 1: Forgot to find/update minimum value",
+          "def max_difference(lst):",
+          "    max_val = lst[0]",
+          "    min_val = lst[0] # Never updated in loop",
+          "    for num in lst:",
+          "        if num > max_val:",
+          "            max_val = num",
+          "    # min_val remains lst[0]",
+          "    return max_val - min_val"
+        ],
+        "student_ids": [1, 2, 6, 7, 10, 11, 12, 13, 18, 22, 25, 27, 28, 30, 3, 9] 
+      },
+      {
+        "category": "Syntax/Structural Issue",
+        "occurrence_count": 9,
+        "occurrence_percentage": "32.14%",
+        "description": "Code suffers from syntax errors (typos, missing colons, incorrect keywords like 'else if'), structural problems (missing return statements, infinite loops due to missing increments), or is fundamentally incomplete (e.g., empty loop bodies).",
+        "example_code": [
+          "# Student 14: Missing colon",
+          "def max_difference(lst):",
+          "    # ... initialization ...",
+          "    for num in lst:",
+          "        if num > max_num # Syntax error: Missing colon",
+          "            max_num = num",
+          "        # ..."
+        ],
+        "student_ids": [3, 5, 9, 14, 16, 17, 19, 21, 26]
+      },
+      {
+        "category": "Potential Runtime Error",
+        "occurrence_count": 7,
+        "occurrence_percentage": "25.00%",
+        "description": "High likelihood of runtime errors due to using uninitialized variables, infinite loops, or fatal syntax errors (e.g., assignment vs. comparison in conditional).",
+        "example_code": [
+          "# Student 4: Uninitialized min_val",
+          "def max_difference(lst):",
+          "    max_val = lst[0]",
+          "    # Forgot to initialize min_val",
+          "    for num in lst:",
+          "        # ... max check ...",
+          "        if num < min_val: # Runtime error: NameError",
+          "            min_val = num"
+        ],
+        "student_ids": [4, 5, 14, 15, 17, 19, 26]
+      },
+      {
+        "category": "Initialization Error",
+        "occurrence_count": 2,
+        "occurrence_percentage": "7.14%",
+        "description": "Failure to initialize tracking variables (min_val and/or max_val) before use in the loop, leading to potential runtime errors.",
+        "example_code": [
+          "# Student 15: Missing both initializations",
+           "def max_difference(lst):",
+          "    # max_val = lst[0] <-- Missing",
+          "    # min_val = lst[0] <-- Missing",
+          "    for num in lst:",
+          "        if num > max_val: # Error: max_val not defined",
+          "            max_val = num"
+        ],
+        "student_ids": [4, 15]
+      },
+      {
+        "category": "Off-by-One Error",
+        "occurrence_count": 2,
+        "occurrence_percentage": "7.14%",
+        "description": "Loop range is incorrect (e.g., `range(len(lst)-1)` or `range(1, len(lst)-1)`), causing the loop to miss checking the last element of the list.",
+        "example_code": [
+           "# Student 8: Loop misses last element",
+           "def max_difference(lst):",
+           "    # ... initialization ...",
+           "    for i in range(len(lst) - 1): # Incorrect range",
+           "        # ... comparisons using lst[i] ...",
+           "    # Never checks lst[len(lst)-1]",
+           "    return largest - smallest"
+        ],
+        "student_ids": [8, 23]
+      }
+    ],
+    "error_correlations": [
+      {
+        "correlated_errors": ["Logic Error", "Syntax/Structural Issue"],
+        "correlation_count": 7,
+        "correlation_percentage": "25.00%",
+        "hypothesis": "Students who struggle with the core algorithm logic (updates, returns) are also more likely to leave parts of the code incomplete (e.g., empty loop bodies) or make structural mistakes.",
+        "example_code": [
+          "# Student 9: Correct setup, incomplete logic",
+          "def max_difference(lst):",
+          "    largest = lst[0]",
+          "    smallest = lst[0]",
+          "    for num in lst:",
+          "        if num > largest:",
+          "            pass # Missing update (Logic/Structural)",
+          "        if num < smallest:",
+          "            pass # Missing update (Logic/Structural)"
+        ],
+        "student_ids": [3, 6, 7, 9, 21, 22, 28] 
+      },
+      {
+        "correlated_errors": ["Syntax/Structural Issue", "Potential Runtime Error"],
+        "correlation_count": 5,
+        "correlation_percentage": "17.86%",
+        "hypothesis": "Fundamental syntax errors (typos, wrong keywords, missing elements) or major structural issues like infinite loops often directly lead to code that cannot run or crashes.",
+        "example_code": [
+          "# Student 17: Infinite loop",
+          "def max_difference(lst):",
+          "    # ... initialization ...",
+          "    i = 0",
+          "    while i < len(lst):",
+          "        # ... comparisons ... ",
+          "        # Error: Infinite loop (Structural -> Runtime)",
+          "        # Need i += 1 here"
+        ],
+        "student_ids": [5, 14, 17, 19, 26]
+      },
+      {
+        "correlated_errors": ["Initialization Error", "Potential Runtime Error"],
+        "correlation_count": 2,
+        "correlation_percentage": "7.14%",
+        "hypothesis": "Forgetting to initialize variables before using them is a direct cause of `NameError` runtime crashes.",
+        "example_code": [
+          "# Student 4: Uninitialized min_val",
+          "def max_difference(lst):",
+          "    max_val = lst[0]",
+          "    # min_val = lst[0] <-- Missing (Initialization Error)",
+          "    for num in lst:",
+          "        # ...",
+          "        if num < min_val: # Runtime error (Potential Runtime Error)",
+          "             min_val = num"
+        ],
+        "student_ids": [4, 15]
+      }
+    ],
+    "potential_misconceptions": [
+      {
+        "misconception": "Incomplete translation of algorithm steps into code.",
+        "related_error_categories": ["Logic Error", "Syntax/Structural Issue"],
+        "occurrence_count": 16, 
+        "occurrence_percentage": "57.14%",
+        "explanation_diagnostic": "Students understand the overall goal (find min/max, subtract) and can set up variables/loops, but struggle to correctly implement *all* necessary steps within the loop (e.g., forgetting to update one variable, missing the comparison) or the final calculation/return.",
+        "example_code_error": [
+           "# Student 6: Missing min_val update",
+           "def max_difference(lst):",
+           "    # ... init ...",
+           "    for num in lst:",
+           "        if num > max_val:",
+           "            max_val = num",
+           "        if num < min_val:",
+           "            pass # Forgot: min_val = num",
+           "    return max_val - min_val"
+        ],
+        "student_ids": [1, 2, 3, 6, 7, 9, 10, 11, 12, 13, 18, 21, 22, 25, 27, 28, 30],
+        "suggested_explanation_for_students": "When finding both the minimum and maximum in a list, remember that your loop needs to do *two* main jobs: check if the current number is *greater* than the maximum found so far, AND check if it's *less* than the minimum found so far. Make sure you have separate `if` statements to handle both checks and update the correct variable (`max_val` or `min_val`) inside each one. Also, double-check that your final `return` statement calculates the difference correctly (`max_val - min_val`).",
+        "correct_code_example": [
+          "def find_max_difference(nums):",
+          "  if not nums: return 0 # Or raise error",
+          "  max_v = nums[0]",
+          "  min_v = nums[0]",
+          "  for i in range(1, len(nums)):",
+          "    if nums[i] > max_v: # Check and update max",
+          "      max_v = nums[i]",
+          "    if nums[i] < min_v: # Check and update min",
+          "      min_v = nums[i]",
+          "  return max_v - min_v # Return difference"
+        ],
+        "follow_up_question": "If the input list is `[3, 1, 4, 1, 5]`, what will `max_v` and `min_v` be just before the function returns? What will the final returned value be?"
+      },
+      {
+        "misconception": "Lack of familiarity with fundamental Python syntax and variable scope/lifetime.",
+        "related_error_categories": ["Syntax/Structural Issue", "Potential Runtime Error", "Initialization Error", "Control Flow Error"],
+        "occurrence_count": 9,
+        "occurrence_percentage": "32.14%",
+        "explanation_diagnostic": "Errors suggest a need to reinforce basic Python syntax (colons, keywords like `if`/`elif`, indentation), the concept that variables must be initialized before use, and how loops execute (e.g., ensuring loop counters are incremented in `while` loops).",
+        "example_code_error": [
+          "# Student 19: Syntax error (else if)",
+          "def max_difference(lst):",
+          "    # ... init ...",
+          "    for num in lst:",
+          "        if num > max_val:",
+          "            max_val = num",
+          "        else if num < min_val: # Syntax Error: use 'elif'",
+          "            min_val = num"
+        ],
+        "student_ids": [4, 5, 14, 15, 16, 17, 19, 26], 
+        "suggested_explanation_for_students": "Pay close attention to Python's syntax rules! Remember to put a colon (`:`) at the end of `if`, `for`, `while`, and `def` lines. Use `elif` for 'else if' conditions. Make sure you initialize variables (give them a starting value) *before* you try to use them in comparisons or calculations. In `while` loops, ensure the condition eventually becomes false, often by incrementing a counter variable inside the loop.",
+        "correct_code_example": [
+          "count = 0",
+          "limit = 5",
+          "while count < limit:",
+          "  print(count)",
+          "  # Need to increment to avoid infinite loop!",
+          "  count += 1 ", 
+          "",
+          "my_variable = 10 # Initialization",
+          "if my_variable > 5: # Correct if syntax",
+          "  print('Greater')",
+          "elif my_variable == 5:",
+          "  print('Equal')",
+          "else:",
+          "  print('Smaller')"
+        ],
+        "follow_up_question": "What would happen in the `while` loop example if the line `count += 1` was missing? What is the keyword used in Python for an 'else if' condition?"
+      },
+       {
+        "misconception": "Misunderstanding loop range or index usage.",
+        "related_error_categories": ["Off-by-One Error", "Logic Error"],
+        "occurrence_count": 3, 
+        "occurrence_percentage": "10.71%",
+        "explanation_diagnostic": "Students may be unsure how `range()` works, leading to loops that stop one element too early. Others might incorrectly use a fixed index (like `lst[0]`) inside the loop instead of the loop variable (`lst[i]`).",
+        "example_code_error": [
+           "# Student 12: Using lst[0] instead of lst[i]",
+           "def max_difference(lst):",
+           "    # ... init ...",
+           "    for i in range(1, len(lst)):",
+           "        # Error: Always compares the first element",
+           "        if lst[0] > maximum: ",
+           "            maximum = lst[i]"
+         ],
+        "student_ids": [8, 12, 23],
+        "suggested_explanation_for_students": "When looping through a list using indices with `range(len(lst))`, the index variable (e.g., `i`) goes from 0 up to `len(lst) - 1`. Make sure your range includes all necessary indices. Inside the loop, use `lst[i]` to access the element *at the current index `i`*, not a fixed index like `lst[0]` unless that's specifically intended.",
+        "correct_code_example": [
+          "my_list = [10, 20, 30]",
+          "# Loop through indices 0, 1, 2",
+          "for i in range(len(my_list)):", 
+          "  # Access element at current index i",
+          "  print(f\"Index {i}, Value {my_list[i]}\")"
+        ],
+        "follow_up_question": "If `my_list = [5, 15, 25, 35]`, what indices will `i` take on in the loop `for i in range(1, len(my_list) - 1):`? Which elements will be missed?"
+      }
+    ]
+  }
+}

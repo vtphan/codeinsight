@@ -1,0 +1,15 @@
+frontend/node_modules/
+frontend/.DS_Store
+frontend/.env*
+
+backend/dist/
+backend/.DS_Store
+backend/.env*
+
+docs/
+
+# Optional extras
+*.log
+.env
+.DS_Store
+

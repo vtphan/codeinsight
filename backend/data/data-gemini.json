@@ -1,0 +1,459 @@
+{
+  "problem_summary": {
+    "title": "Max Difference in List"
+  },
+  "overall_assessment": {
+    "total_entries": 40,
+    "performance_distribution": {
+      "poor": {
+        "count": 7,
+        "percentage": "17.50%"
+      },
+      "struggling": {
+        "count": 6,
+        "percentage": "15.00%"
+      },
+      "good_progress": {
+        "count": 1,
+        "percentage": "2.50%"
+      },
+      "strong": {
+        "count": 26,
+        "percentage": "65.00%"
+      }
+    }
+  },
+  "individual_assessment": [
+    {
+      "student_id": 1,
+      "performance_level": "Poor"
+    },
+    {
+      "student_id": 2,
+      "performance_level": "Poor"
+    },
+    {
+      "student_id": 3,
+      "performance_level": "Struggling"
+    },
+    {
+      "student_id": 4,
+      "performance_level": "Struggling"
+    },
+    {
+      "student_id": 5,
+      "performance_level": "Poor"
+    },
+    {
+      "student_id": 6,
+      "performance_level": "Struggling"
+    },
+    {
+      "student_id": 7,
+      "performance_level": "Poor"
+    },
+    {
+      "student_id": 8,
+      "performance_level": "Poor"
+    },
+    {
+      "student_id": 9,
+      "performance_level": "Struggling"
+    },
+    {
+      "student_id": 10,
+      "performance_level": "Poor"
+    },
+    {
+      "student_id": 11,
+      "performance_level": "Poor"
+    },
+    {
+      "student_id": 12,
+      "performance_level": "Good Progress"
+    },
+    {
+      "student_id": 13,
+      "performance_level": "Struggling"
+    },
+    {
+      "student_id": 14,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 15,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 16,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 17,
+      "performance_level": "Struggling"
+    },
+    {
+      "student_id": 18,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 19,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 20,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 21,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 22,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 23,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 24,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 25,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 26,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 27,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 28,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 29,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 30,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 31,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 32,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 33,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 34,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 35,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 36,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 37,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 38,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 39,
+      "performance_level": "Strong"
+    },
+    {
+      "student_id": 40,
+      "performance_level": "Strong"
+    }
+  ],
+  "aggregate_analysis": {
+    "top_errors": [
+      {
+        "category": "Logic Error",
+        "occurrence_count": 7,
+        "occurrence_percentage": "53.85%",
+        "description": "The core algorithm logic is flawed. This includes comparing only adjacent elements, only comparing to the first element, incorrectly handling negative numbers, swapping min/max update logic, or using incomplete sorting.",
+        "example_code": [
+          "def max_difference(lst):",
+          "    diff = 0",
+          "    for i in range(len(lst)-1):",
+          "        if lst[i+1] - lst[i] > diff: # Only checks adjacent difference",
+          "            diff = lst[i+1] - lst[i]",
+          "    return diff"
+        ],
+        "student_ids": [
+          1,
+          3,
+          4,
+          6,
+          7,
+          9,
+          13,
+          17
+        ]
+      },
+      {
+        "category": "Misinterpretation of Problem",
+        "occurrence_count": 6,
+        "occurrence_percentage": "46.15%",
+        "description": "Code solves a different problem than finding the difference between the overall maximum and minimum. Examples include assuming the list is sorted, calculating the sum of differences, or returning only the maximum value.",
+        "example_code": [
+          "def max_difference(lst):",
+          "    return lst[-1] - lst[0] # Assumes sorted list"
+        ],
+        "student_ids": [
+          1,
+          3,
+          5,
+          6,
+          8,
+          10
+        ]
+      },
+      {
+        "category": "Edge Case Handling Error",
+        "occurrence_count": 5,
+        "occurrence_percentage": "38.46%",
+        "description": "Code fails on specific valid inputs like lists containing only negative numbers (often due to incorrect initialization) or lists with only one element (leading to index errors in some approaches).",
+        "example_code": [
+          "def max_difference(lst):",
+          "    min_val = 0 # Fails if lst = [-5, -2, -8]",
+          "    max_val = 0 # Fails if lst = [-5, -2, -8]",
+          "    for num in lst:",
+          "        if num > max_val:",
+          "            max_val = num",
+          "        if num < min_val:",
+          "            min_val = num",
+          "    return max_val - min_val"
+        ],
+        "student_ids": [
+          4,
+          7,
+          8,
+          13,
+          17
+        ]
+      },
+      {
+        "category": "Initialization Error",
+        "occurrence_count": 3,
+        "occurrence_percentage": "23.08%",
+        "description": "Minimum and/or maximum tracking variables are initialized incorrectly, commonly to 0, leading to failures when input values do not span across 0 (e.g., all negative numbers).",
+        "example_code": [
+          "def max_difference(lst):",
+          "    min_val = 0",
+          "    max_val = 0",
+          "    # ... rest of loop ...",
+          "    return max_val - min_val"
+        ],
+        "student_ids": [
+          3,
+          4,
+          13
+        ]
+      },
+      {
+        "category": "Requirement Violation",
+        "occurrence_count": 2,
+        "occurrence_percentage": "15.38%",
+        "description": "Code explicitly violates the requirement of not using built-in `min()` or `max()` functions.",
+        "example_code": [
+          "def max_difference(lst):",
+          "    return max(lst) - min(lst)"
+        ],
+        "student_ids": [
+          2,
+          11
+        ]
+      }
+    ],
+    "error_correlations": [
+      {
+        "correlated_errors": [
+          "Misinterpretation of Problem",
+          "Logic Error"
+        ],
+        "correlation_count": 6,
+        "correlation_percentage": "46.15%",
+        "hypothesis": "Students who misunderstand the core requirement (find overall max - overall min) naturally implement incorrect logic (e.g., comparing adjacent items, assuming sorted). The misinterpretation directly causes the logic error.",
+        "example_code": [
+          "def max_difference(lst):",
+          "    diff = 0",
+          "    for i in range(len(lst)-1):",
+          "        if lst[i+1] - lst[i] > diff: # Logic error stemming from misinterpreting goal",
+          "            diff = lst[i+1] - lst[i]",
+          "    return diff"
+        ],
+        "student_ids": [
+          1,
+          3,
+          5,
+          6,
+          8,
+          10
+        ]
+      },
+      {
+        "correlated_errors": [
+          "Initialization Error",
+          "Edge Case Handling Error"
+        ],
+        "correlation_count": 2,
+        "correlation_percentage": "15.38%",
+        "hypothesis": "Incorrectly initializing min/max variables (like to 0) is a direct cause of failing edge cases, specifically lists containing only negative numbers.",
+        "example_code": [
+          "def max_difference(lst):",
+          "    min_val = 0 # Initialization error",
+          "    max_val = 0 # Initialization error",
+          "    for num in lst: # Causes Edge Case failure for lst = [-5, -1]",
+          "        if num > max_val:",
+          "            max_val = num",
+          "        if num < min_val:",
+          "            min_val = num",
+          "    return max_val - min_val"
+        ],
+        "student_ids": [
+          4,
+          13
+        ]
+      },
+      {
+        "correlated_errors": [
+          "Misinterpretation of Problem",
+          "Potential Runtime Error"
+        ],
+        "correlation_count": 2,
+        "correlation_percentage": "15.38%",
+        "hypothesis": "Attempts to solve a misunderstood, simpler version of the problem (e.g., only looking at the first two elements) lead to code that crashes (IndexError) on valid inputs like single-element lists.",
+        "example_code": [
+          "def max_difference(lst):",
+          "    return abs(lst[1] - lst[0]) # Misinterpretation leads to IndexError for len(lst) < 2"
+        ],
+        "student_ids": [
+          7,
+          8
+        ]
+      }
+    ],
+    "potential_misconceptions": [
+      {
+        "misconception": "Confusing 'largest difference' with adjacent differences or assuming list properties (like being sorted).",
+        "related_error_categories": [
+          "Misinterpretation of Problem",
+          "Logic Error"
+        ],
+        "occurrence_count": 6,
+        "occurrence_percentage": "46.15%",
+        "explanation_diagnostic": "Students struggle to translate the requirement ('largest difference between *any* two numbers') into the correct algorithm (find the overall minimum, find the overall maximum, then subtract). They implement simpler but incorrect algorithms like checking differences between neighbors or assuming the first/last elements are the extremes.",
+        "example_code_error": [
+          "def max_difference(lst):",
+          "    # Incorrectly assumes first/last elements are min/max",
+          "    return lst[-1] - lst[0]"
+        ],
+        "student_ids": [
+          1,
+          3,
+          5,
+          6,
+          8,
+          10
+        ],
+        "suggested_explanation_for_students": "The problem asks for the difference between the absolute biggest and smallest numbers *anywhere* in the list, not just between neighbors or the first/last elements. You need to find the single minimum value and the single maximum value in the entire list first, and *then* calculate their difference.",
+        "correct_code_example": [
+          "def max_difference(lst):",
+          "  min_val = lst[0]",
+          "  max_val = lst[0]",
+          "  for i in range(1, len(lst)):",
+          "    if lst[i] < min_val:",
+          "      min_val = lst[i]",
+          "    if lst[i] > max_val:",
+          "      max_val = lst[i]",
+          "  return max_val - min_val"
+        ],
+        "follow_up_question": "If the input list is `[10, 2, 8, 5]`, what value will `min_val` have after the loop finishes? What value will `max_val` have?"
+      },
+      {
+        "misconception": "Assuming default/zero initialization works universally for finding extremes.",
+        "related_error_categories": [
+          "Initialization Error",
+          "Edge Case Handling Error",
+          "Logic Error"
+        ],
+        "occurrence_count": 3,
+        "occurrence_percentage": "23.08%",
+        "explanation_diagnostic": "Students initialize min/max tracking variables to 0 without considering the range of possible inputs. This suggests they haven't considered edge cases like lists containing only negative numbers, where 0 would be incorrectly chosen as the maximum, or lists of positive numbers where 0 might be incorrectly chosen as the minimum.",
+        "example_code_error": [
+          "def max_difference(lst):",
+          "  min_val = 0 # Misconception: Fails if lst = [-5, -2]",
+          "  max_val = 0 # Misconception: Fails if lst = [-5, -2]",
+          "  for num in lst:",
+          "    if num < min_val: min_val = num",
+          "    if num > max_val: max_val = num",
+          "  return max_val - min_val # Returns 0 - (-5) = 5, should be -2 - (-5) = 3"
+        ],
+        "student_ids": [
+          3,
+          4,
+          13
+        ],
+        "suggested_explanation_for_students": "When finding a minimum or maximum, starting with 0 only works if you know the numbers will span across zero. If all numbers might be negative (or all positive and greater than 0), 0 is not a safe starting point. A reliable approach is to initialize your `min_val` and `max_val` using the *first element* of the list itself, ensuring you start with a value that's actually in the list's range.",
+        "correct_code_example": [
+          "def max_difference(lst):",
+          "  # Assumes list has at least one element per problem description",
+          "  min_val = lst[0] # Initialize with first element",
+          "  max_val = lst[0] # Initialize with first element",
+          "  for i in range(1, len(lst)): # Start loop from the second element",
+          "    if lst[i] < min_val:",
+          "      min_val = lst[i]",
+          "    if lst[i] > max_val:",
+          "      max_val = lst[i]",
+          "  return max_val - min_val"
+        ],
+        "follow_up_question": "If you use the correct initialization `min_val = lst[0]` and `max_val = lst[0]`, what will their initial values be for the input `[-10, -3, -15]`?"
+      },
+      {
+        "misconception": "Overlooking or ignoring explicit problem constraints.",
+        "related_error_categories": [
+          "Requirement Violation"
+        ],
+        "occurrence_count": 2,
+        "occurrence_percentage": "15.38%",
+        "explanation_diagnostic": "Students used built-in functions (`min()`, `max()`) despite the explicit instruction not to. This might be due to not reading carefully, forgetting the constraint, or prioritizing a quick solution over following directions.",
+        "example_code_error": [
+          "def max_difference(lst):",
+          "    # Violates requirement not to use built-ins",
+          "    return max(lst) - min(lst)"
+        ],
+        "student_ids": [
+          2,
+          11
+        ],
+        "suggested_explanation_for_students": "Pay close attention to all requirements in the problem description! Sometimes, constraints like 'do not use built-in function X' are there specifically to test your understanding of how to implement that functionality yourself. Always double-check the requirements before submitting.",
+        "correct_code_example": [
+          "# (See correct_code_example from Misconception 1 or 2 -",
+          "# the goal is to show the manual loop approach)"
+        ],
+        "follow_up_question": "Why might an instructor ask you *not* to use `min()` or `max()` even though they exist? What skill might they be trying to assess?"
+      }
+    ]
+  }
+}
