@@ -26,7 +26,7 @@ const StudentSubmission = ({ studentSubmissions, submissionTimes, studentId }) =
         <p><strong>Student ID:</strong> {snapshot.student_id}</p>
         <p><strong>Snapshot Time:</strong> {snapshot.timestamp}</p>
         {submission && (
-          <p><strong>Submission Time:</strong> {submission.submission_times}</p>
+          <p><strong>Submission Time:</strong> {submission.timestamp}</p>
         )}
       </div>
       
