@@ -125,6 +125,8 @@ const AnalyzeView = ({ analysisData, problemDescription, codeSnapshots, submissi
                   misconception={misconception} 
                   addToScreenQueue={addToScreenQueue}
                   studentSubmissions={codeSnapshots}
+                  expanded={true}
+                  // isRespond={true}
                   submissionTimes={submissionTimes}
                 />
               ))}

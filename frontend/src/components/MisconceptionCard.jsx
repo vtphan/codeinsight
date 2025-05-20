@@ -220,7 +220,7 @@ const MisconceptionCard = ({
           {misconception.student_ids && (
             <>
             <div className="affected-students" style={{marginTop: '1rem'}}>
-              <b>Group intervention: </b>
+              <b>Affected Students: </b>
                 {misconception.student_ids.map((studentId, index) => (
                   <span key={studentId}>
                     <a 

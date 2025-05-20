@@ -27,7 +27,7 @@ const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissi
             <div className="stat-card">
               <h3 className="stat-title">Reviewed</h3>
               <div className="stat-value">
-                {taInterventionTimes.interventions.length}
+                {analysisData.individual_assessment.length}
               </div>
             </div>
 
@@ -68,6 +68,7 @@ const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissi
         <h3 className="section-title">Students' Code Snapshot</h3>
         <TAInterventionsCard 
           taInterventions={taInterventionTimes}
+          individualAssessment={analysisData.individual_assessment}
           totalStudents={overall_assessment.total_entries}
           codeSnapshots={codeSnapshots}
           submissionTimes={submissionTimes}

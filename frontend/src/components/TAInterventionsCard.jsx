@@ -4,7 +4,7 @@ import { Eye, Users } from 'lucide-react';
 import Modal from './Modal';
 import StudentSubmission from './StudentSubmission';
 
-const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes }) => {
+const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes, individualAssessment=[] }) => {
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('not-reviewed'); // 'reviewed' or 'not-reviewed'
@@ -26,7 +26,7 @@ const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes }
 
   // Get the list of students who haven't been reviewed
   const notReviewedStudents = useMemo(() => {
-    if (!taInterventions?.interventions || !codeSnapshots?.entries) {
+    if (!taInterventions?.interventions || !codeSnapshots?.entries || !individualAssessment) {
       return [];
     }
 
@@ -38,15 +38,15 @@ const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes }
     
     // Get all reviewed student IDs
     const reviewedStudentIds = new Set();
-    taInterventions.interventions.forEach(intervention => {
-      reviewedStudentIds.add(intervention.student_id);
+    individualAssessment.forEach(assessment => {
+      reviewedStudentIds.add(assessment.student_id);
     });
     
     // Filter to get students who haven't been reviewed
     return Array.from(allStudentIds)
       .filter(id => !reviewedStudentIds.has(id))
       .sort((a, b) => a - b);
-  }, [taInterventions, codeSnapshots]);
+  }, [taInterventions, codeSnapshots, individualAssessment]);
 
   const handleStudentClick = (studentId) => {
     setSelectedStudentId(studentId);
@@ -58,7 +58,7 @@ const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes }
   };
 
   // Calculate percentages
-  const reviewedCount = taInterventions?.interventions?.length || 0;
+  const reviewedCount = individualAssessment.length || 0;
 
   // Get the border color based on submission status
   const getBorderStyle = (studentId) => {
@@ -132,11 +132,11 @@ const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes }
       <div className="students-list" style={{ maxHeight: '250px', overflowY: 'auto' }}>
         {activeTab === 'reviewed' ? (
           // Reviewed students
-          taInterventions?.interventions?.length > 0 ? (
+          individualAssessment?.length > 0 ? (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-              {taInterventions.interventions.map((intervention) => (
+              {individualAssessment.map((assessment) => (
                 <div 
-                  key={intervention.student_id}
+                  key={assessment.student_id}
                   style={{ 
                     backgroundColor: 'var(--background-color)', 
                     padding: '0.3rem 0.5rem',
@@ -145,17 +145,17 @@ const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes }
                     alignItems: 'center',
                     gap: '0.5rem',
                     cursor: 'pointer',
-                    border: getBorderStyle(intervention.student_id),
+                    border: getBorderStyle(assessment.student_id),
                     fontSize: '0.7rem' 
                   }}
-                  onClick={() => handleStudentClick(intervention.student_id)}
+                  onClick={() => handleStudentClick(assessment.student_id)}
                 >
-                  <span>{intervention.student_id}</span>
+                  <span>{assessment.student_id}</span>
                 </div>
               ))}
             </div>
           ) : (
-            <p>No TA interventions recorded yet.</p>
+            <p>No students have been reviewed yet.</p>
           )
         ) : (
           // Students not reviewed

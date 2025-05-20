@@ -30,12 +30,12 @@ function App() {
     setIsRegenerating(true);
   
     const urlParams = new URLSearchParams(window.location.search);
-    const problemId = urlParams.get("problem_id")
-    // const problemId = 16
+    // const problemId = urlParams.get("problem_id")
+    const problemId = 16
     const regenerate = true;
     fetch
-    // (`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
-    (`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    (`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    // (`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
 
       .then((res) => {
         if (!res.ok) throw new Error("Failed to regenerate data");
@@ -68,11 +68,11 @@ function App() {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    // const problemId = 16
-    const problemId = urlParams.get("problem_id")
+    const problemId = 16
+    // const problemId = urlParams.get("problem_id")
     const regenerate = false;
-    // fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
-    fetch(`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    // fetch(`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
 
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch data");
