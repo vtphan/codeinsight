@@ -9,9 +9,7 @@ const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissi
 
   return (
     <div className="monitor-view">
-      <div className="two-column">
-        <div className="monitor-stats card">
-          <div className="stats-row">
+      <div className="stats-row">
             <div className="stat-card">
               <h3 className="stat-title">Students</h3>
               <div className="stat-value">
@@ -32,7 +30,17 @@ const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissi
                 {taInterventionTimes.interventions.length}
               </div>
             </div>
+
+            <div className="stat-card">
+              <h3 className="stat-title">Help Requests</h3>
+              <div className="stat-value">
+                {taInterventionTimes.interventions.length}
+              </div>
+            </div>
           </div>
+      <div className="two-column">
+        
+        <div className="monitor-stats card">
           
           <div className="performance-chart-container">
             <PerformanceComparisonChart 

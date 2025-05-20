@@ -7,7 +7,7 @@ import StudentSubmission from './StudentSubmission';
 const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes }) => {
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('reviewed'); // 'reviewed' or 'not-reviewed'
+  const [activeTab, setActiveTab] = useState('not-reviewed'); // 'reviewed' or 'not-reviewed'
 
   // Get submission status for all students
   const studentSubmissionStatus = useMemo(() => {

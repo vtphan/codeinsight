@@ -6,6 +6,7 @@ import Modal from './Modal';
 import StudentSubmission from './StudentSubmission';
 import EditableCodeBlock from './EditableCodeBlock';
 import { useEffect } from 'react';
+import GroupFeedback from './GroupFeedback';
 
 const MisconceptionCard = ({ 
   misconception, 
@@ -77,6 +78,12 @@ const MisconceptionCard = ({
     setSelectedStudentId(studentId);
     setIsModalOpen(true);
   };
+
+  const snapshotMap = studentSubmissions?.entries
+  ? Object.fromEntries(
+      studentSubmissions.entries.map(entry => [entry.student_id, entry])
+    )
+  : {};
 
   const handleCloseModal = () => setIsModalOpen(false);
 
@@ -211,6 +218,7 @@ const MisconceptionCard = ({
           )}
 
           {misconception.student_ids && (
+            <>
             <div className="affected-students" style={{marginTop: '1rem'}}>
               <b>Group intervention: </b>
                 {misconception.student_ids.map((studentId, index) => (
@@ -229,6 +237,11 @@ const MisconceptionCard = ({
                   </span>
                 ))}
             </div>
+            <div style={{ marginTop: '1.5rem' }}>
+  <GroupFeedback misconception={misconception} snapshotMap={snapshotMap} />
+</div>
+
+            </>
           )}
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '1rem' }}>

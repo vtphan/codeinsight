@@ -297,3 +297,24 @@ body {
     margin-top: 120px;
   }
 }
+
+
+.regenerate-btn.disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.spinner-small {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #fff;
+  border-top-color: #007bff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
