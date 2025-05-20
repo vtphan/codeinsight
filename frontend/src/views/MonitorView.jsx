@@ -27,7 +27,10 @@ const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissi
             <div className="stat-card">
               <h3 className="stat-title">Reviewed</h3>
               <div className="stat-value">
-                {analysisData.individual_assessment.length}
+                {/* exclude items with ""performance_level": "NotAssessed"" */}
+                {analysisData.individual_assessment.filter(
+                  (item) => item.performance_level != "NotAssessed"
+                ).length}
               </div>
             </div>
 

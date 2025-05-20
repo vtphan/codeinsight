@@ -39,7 +39,9 @@ const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes, 
     // Get all reviewed student IDs
     const reviewedStudentIds = new Set();
     individualAssessment.forEach(assessment => {
-      reviewedStudentIds.add(assessment.student_id);
+      if (assessment.performance_level != "NotAssessed") {
+        reviewedStudentIds.add(assessment.student_id);
+      }
     });
     
     // Filter to get students who haven't been reviewed
@@ -58,7 +60,9 @@ const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes, 
   };
 
   // Calculate percentages
-  const reviewedCount = individualAssessment.length || 0;
+  const reviewedCount = individualAssessment.filter(
+    (item) => item.performance_level != "NotAssessed"
+  ).length || 0;
 
   // Get the border color based on submission status
   const getBorderStyle = (studentId) => {
