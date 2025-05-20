@@ -18,29 +18,40 @@
   
   /* Style for statistics row */
   .stats-row {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
     margin-bottom: 2rem;
-    flex-wrap: wrap;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
   
   /* Style for individual stat cards */
   .stat-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    background-color: white;
+    border: 1px solid #f3f4f6;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem 1.5rem 1rem;
     text-align: center;
-    flex: 1;
-    min-width: calc(25% - 10px);
-    padding: 0 5px;
   }
   
   .stat-title {
     font-size: 1rem;
     margin-bottom: 0.5rem;
+    color: #6b7280;
+    font-weight: 500;
   }
   
   .stat-value {
     font-size: 5rem;
     font-weight: bold;
-    color: var(--primary-color);
+    color: #2563eb; /* blue-600 */
+    line-height: 1;
   }
   
   /* Chart containers */
@@ -70,8 +81,12 @@
       grid-template-columns: 1fr 1fr;
     }
     
+    .stats-row {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
     .stat-value {
-      font-size: 2.5rem;
+      font-size: 3.5rem;
     }
   }
   
@@ -92,17 +107,15 @@
   
   @media (max-width: 768px) {
     .stats-row {
-      flex-direction: column;
-      align-items: center;
+      grid-template-columns: 1fr;
     }
     
     .stat-card {
-      width: 100%;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
     
     .stat-value {
-      font-size: 2.25rem;
+      font-size: 3rem;
     }
     
     .performance-chart-container,
