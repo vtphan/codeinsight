@@ -167,8 +167,7 @@ const PerformanceComparisonChart = ({
         position: 'top',
       },
       title: {
-        display: true,
-        text: 'Performance Comparison by Submission Status',
+        display: false,
       },
     },
   };
@@ -179,7 +178,7 @@ const PerformanceComparisonChart = ({
   
   return (
     <div className="performance-comparison-chart">
-      <div style={{ height: '510px', border: 'solid 0px' }}> 
+      <div style={{ height: '550px' }}> 
         <Bar data={data} options={options} />
       </div>
     </div>

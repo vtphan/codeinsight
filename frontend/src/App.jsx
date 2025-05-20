@@ -23,7 +23,6 @@ function App() {
   const [error, setError] = useState(null);
   const [isRegenerating, setIsRegenerating] = useState(false);
 
-
   const handleRegenerate = () => {
     const confirmed = window.confirm("This will send student codesnapshots to AI for analysis. Are you sure you want to do it?");
     if (!confirmed) return;
@@ -31,14 +30,15 @@ function App() {
     setIsRegenerating(true);
   
     const urlParams = new URLSearchParams(window.location.search);
-    const problemId = 16
-    // const problemId = urlParams.get("problem_id")
+    const problemId = urlParams.get("problem_id")
+    // const problemId = 16
     const regenerate = true;
-  fetch
-    (`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    fetch
+    // (`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    (`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+
       .then((res) => {
         if (!res.ok) throw new Error("Failed to regenerate data");
-        console.log(res);
         return res.json();
       })
       .then((data) => {
@@ -68,14 +68,14 @@ function App() {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    // const problemId = urlParams.get("problem_id")
-    const problemId = 16
+    // const problemId = 16
+    const problemId = urlParams.get("problem_id")
     const regenerate = false;
-    fetch
-    (`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    // fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    fetch(`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+
       .then((res) => {
-        if (!res.ok) throw new Error("Failed to regenerate data");
-        console.log(res);
+        if (!res.ok) throw new Error("Failed to fetch data");
         return res.json();
       })
       .then((data) => {
@@ -122,6 +122,12 @@ function App() {
     setIsPresentationMode(!isPresentationMode);
   };
 
+  const handleHomeClick = () => {
+    // Get the base URL by using the origin property
+    const baseUrl = window.location.origin;
+    window.location.href = baseUrl;
+  };
+
   if (error) return <div className="app">Error: {error}</div>;
   if (
     !analysisData ||
@@ -153,12 +159,32 @@ function App() {
       ) : (
         <>
           <header className="app-header">
-            <h3
-              onClick={() => setIsModalOpen(true)}
-              style={{ cursor: "pointer" }}
-            >
-              {analysisData.problem_summary.title}
-            </h3>
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <button
+                onClick={handleHomeClick}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: '0.5rem 1rem',
+                  fontSize: '1rem',
+                  color: 'var(--primary-color)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  borderRadius: '0.375rem',
+                  fontWeight: '800'
+                }}
+                title="home"
+              >
+                Home
+              </button>
+              <h3
+                onClick={() => setIsModalOpen(true)}
+                style={{ cursor: "pointer" }}
+              >
+                {analysisData.problem_summary.title}
+              </h3>
+            </div>
+            
             <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
               <ScreenQueueIndicator
                 screenQueue={screenQueue}

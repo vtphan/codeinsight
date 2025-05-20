@@ -43,6 +43,7 @@ const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissi
         <div className="monitor-stats card">
           
           <div className="performance-chart-container">
+          <h3 className="section-title">Performance</h3>
             <PerformanceComparisonChart 
               performanceData={overall_assessment.performance_distribution}
               submissionTimes={submissionTimes}
@@ -52,7 +53,7 @@ const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissi
         </div>
       
         <div className="submission-timeline-container card">
-          <h3 className="section-title">Student Activity Timeline</h3>
+          <h3 className="section-title">Activity</h3>
           <TimelineVisualization 
             codeSnapshots={codeSnapshots}
             submissionTimes={submissionTimes}
