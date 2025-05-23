@@ -136,9 +136,13 @@ const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes, 
       <div className="students-list" style={{ maxHeight: '250px', overflowY: 'auto' }}>
         {activeTab === 'reviewed' ? (
           // Reviewed students
-          individualAssessment?.length > 0 ? (
+          individualAssessment.filter(
+            (item) => item.performance_level != "NotAssessed"
+          ).length > 0 ? (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-              {individualAssessment.map((assessment) => (
+              {individualAssessment.filter(
+                (item) => item.performance_level != "NotAssessed"
+              ).map((assessment) => (
                 <div 
                   key={assessment.student_id}
                   style={{ 

@@ -31,11 +31,10 @@ function App() {
   
     const urlParams = new URLSearchParams(window.location.search);
     // const problemId = urlParams.get("problem_id")
-    const problemId = 16
+    const problemId = 18
     const regenerate = true;
-    fetch
-    (`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
-    // (`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    // fetch(`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
 
       .then((res) => {
         if (!res.ok) throw new Error("Failed to regenerate data");
@@ -68,35 +67,47 @@ function App() {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const problemId = 16
-    // const problemId = urlParams.get("problem_id")
+    // const problemId = urlParams.get("problem_id");
+    const problemId = 18
+
     const regenerate = false;
-    fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+  
+    const fetchData = () => {
+      fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
     // fetch(`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
-
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch data");
-        return res.json();
-      })
-      .then((data) => {
-        const timestamp = new Date().toLocaleString();
-        console.log(`[${timestamp}] 📡 Data loaded from backend:`, data);
-
-        // 🧹 Clear misconception-related localStorage
-        Object.keys(localStorage)
-          .filter((key) => key.startsWith("misconception-edit-"))
-          .forEach((key) => localStorage.removeItem(key));
-
-        setAnalysisData(data.analysisData);
-        setProblemDescription(data.problemDescription);
-        setCodeSnapshots(data.codeSnapshots);
-        setSubmissionTimes(data.submissionTimes);
-        setTaInterventionTimes(data.taInterventions);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError(err.message);
-      });
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to fetch data");
+          return res.json();
+        })
+        .then((data) => {
+          const timestamp = new Date().toLocaleString();
+          console.log(`[${timestamp}] 🔄 Periodic refresh from backend:`, data);
+  
+          Object.keys(localStorage)
+            .filter((key) => key.startsWith("misconception-edit-"))
+            .forEach((key) => localStorage.removeItem(key));
+  
+          setAnalysisData(data.analysisData);
+          setProblemDescription(data.problemDescription);
+          setCodeSnapshots(data.codeSnapshots);
+          setSubmissionTimes(data.submissionTimes);
+          setTaInterventionTimes(data.taInterventions);
+          setError(null); // clear error on success
+        })
+        .catch((err) => {
+          console.error(err);
+          setError(err.message);
+        });
+    };
+  
+    // Fetch once on mount
+    fetchData();
+  
+    // Set interval to fetch every 10 seconds
+    const intervalId = setInterval(fetchData, 10000); // 10 seconds
+  
+    // Cleanup on unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   const addToScreenQueue = (item) => setScreenQueue([...screenQueue, item]);
