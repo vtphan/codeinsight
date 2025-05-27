@@ -2,10 +2,16 @@
 import TimelineVisualization from '../components/TimelineVisualization';
 import PerformanceComparisonChart from '../components/PerformanceComparisonChart';
 import TAInterventionsCard from '../components/TAInterventionsCard';
+import HelpRequestsCard from '../components/HelpRequestsCard';
 import './MonitorView.css';
 
 const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissionTimes, taInterventionTimes }) => {
   const { overall_assessment } = analysisData;
+  const helpRequests = taInterventionTimes.interventions.filter(
+    (item) => item.help_stat == "Asked for help"
+  )
+  const helpRequestsCount = helpRequests.length
+
 
   return (
     <div className="monitor-view">
@@ -37,7 +43,7 @@ const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissi
             <div className="stat-card">
               <h3 className="stat-title">Help Requests</h3>
               <div className="stat-value">
-                {taInterventionTimes.interventions.length}
+                {helpRequestsCount}
               </div>
             </div>
           </div>
@@ -80,10 +86,14 @@ const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissi
 
       <div className="additional-info card">
         <h3 className="section-title">Notifications</h3>
-        <p>No urgent notifications at this time.</p>
-        <p className="info-note">
-          This area will display notifications if students need immediate assistance or if there are issues that require attention.
-        </p>
+         <HelpRequestsCard 
+          taInterventions={taInterventionTimes}
+          individualAssessment={analysisData.individual_assessment}
+          totalStudents={overall_assessment.total_entries}
+          codeSnapshots={codeSnapshots}
+          submissionTimes={submissionTimes}
+          helpRequests={helpRequests}
+        />
       </div>
     </div>
   );

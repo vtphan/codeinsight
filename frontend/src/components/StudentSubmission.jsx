@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import CodeBlock from './CodeBlock';
 
-const StudentSubmission = ({ studentSubmissions, submissionTimes, studentId }) => {
+const StudentSubmission = ({ studentSubmissions, submissionTimes, studentId, helpRequest=null }) => {
   const [assessment, setAssessment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionMessage, setSubmissionMessage] = useState('');
@@ -156,6 +156,19 @@ const StudentSubmission = ({ studentSubmissions, submissionTimes, studentId }) =
           <p style={{ marginTop: '0.5rem' }}>{submissionMessage}</p>
         )}
       </div>
+
+      {helpRequest && (
+        <div style={{ 
+          marginBottom: '1rem', 
+          padding: '1rem',
+          backgroundColor: '#fff3cd',
+          border: '1px solid #ffeeba',
+          borderRadius: '6px'
+        }}>
+          <h4 style={{ margin: '0 0 0.5rem 0', color: '#856404' }}>Help Request:</h4>
+          <p style={{ margin: 0, color: '#856404' }}>{helpRequest.message}</p>
+        </div>
+      )}
 
       <div className="submission-code">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
