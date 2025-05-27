@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Download, Printer } from 'lucide-react';
 import ErrorItem from '../components/ErrorItem';
 import CorrelationItem from '../components/CorrelationItem';
-import MisconceptionCard from '../components/MisconceptionCard';
+import AnalyzeMisconceptionCard from '../components/AnalyzeMisconceptionCard';
 import StudentTable from '../components/StudentTable';
 import { generatePrintableReport } from '../utils/exportUtils';
 
@@ -120,7 +120,7 @@ const AnalyzeView = ({ analysisData, problemDescription, codeSnapshots, submissi
               </p>
               
               {aggregate_analysis.potential_misconceptions.map((misconception, index) => (
-                <MisconceptionCard 
+                <AnalyzeMisconceptionCard 
                   key={index} 
                   misconception={misconception} 
                   addToScreenQueue={addToScreenQueue}

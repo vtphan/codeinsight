@@ -8,7 +8,7 @@ import EditableCodeBlock from './EditableCodeBlock';
 import { useEffect } from 'react';
 import GroupFeedback from './GroupFeedback';
 
-const MisconceptionCard = ({ 
+const AnalyzeMisconceptionCard = ({ 
   misconception, 
   addToScreenQueue, 
   expanded: initialExpanded = false, 
@@ -144,7 +144,7 @@ const MisconceptionCard = ({
             </div>
           )}
 
-          <div className="code-examples" style={{marginTop: '1rem'}}>
+          {/* <div className="code-examples" style={{marginTop: '1rem'}}>
             {misconception.example_code_error && (
               <div className="error-code">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
@@ -190,9 +190,9 @@ const MisconceptionCard = ({
                 )}
               </div>
             )}
-          </div>
+          </div> */}
 
-          {misconception.follow_up_question && (
+          {/* {misconception.follow_up_question && (
             <div className="follow-up">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
                 <h4>Follow-up Question:</h4>
@@ -215,11 +215,11 @@ const MisconceptionCard = ({
                 <p>{editableFollowUp}</p>
               )}
             </div>
-          )}
+          )} */}
 
           {misconception.student_ids && (
             <>
-            {/* <div className="affected-students" style={{marginTop: '1rem'}}>
+            <div className="affected-students" style={{marginTop: '1rem'}}>
               <b>Affected Students: </b>
                 {misconception.student_ids.map((studentId, index) => (
                   <span key={studentId}>
@@ -236,15 +236,15 @@ const MisconceptionCard = ({
                     {index < misconception.student_ids.length - 1 ? ', ' : ''}
                   </span>
                 ))}
-            </div> */}
+            </div>
             <div style={{ marginTop: '1.5rem' }}>
-  <GroupFeedback misconception={misconception} snapshotMap={snapshotMap} />
+  {/* <GroupFeedback misconception={misconception} snapshotMap={snapshotMap} /> */}
 </div>
 
             </>
           )}
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '1rem' }}>
+          {/* <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '1rem' }}>
             <button 
               className="btn btn-primary" 
               onClick={handleAddToScreen}
@@ -254,7 +254,7 @@ const MisconceptionCard = ({
             <button className="btn btn-secondary" onClick={resetDraft}>
               Reset
             </button>
-          </div>
+          </div> */}
         </div>
       )}
 
@@ -275,4 +275,4 @@ const MisconceptionCard = ({
   );
 };
 
-export default MisconceptionCard;
+export default AnalyzeMisconceptionCard;
