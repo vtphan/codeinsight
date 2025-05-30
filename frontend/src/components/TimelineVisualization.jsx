@@ -61,10 +61,9 @@ const TimelineVisualization = ({
     // Create a map of student IDs to their performance level
     const performanceMap = {};
     const performanceRankMap = {
-      'Poor': 0,
-      'Struggling': 1,
-      'Good Progress': 2,
-      'Strong': 3
+      'Incorrect': 0,
+      'Correct': 1,
+      'NotAssessed': -1
     };
     
     performanceData.forEach(student => {
@@ -75,13 +74,16 @@ const TimelineVisualization = ({
     const getColorForPerformance = (level) => {
       if (!level) return '#6b7280'; // Default gray
       
-      const levelLower = level.toLowerCase();
-      if (levelLower.includes('poor')) return '#ef4444'; // Red
-      if (levelLower.includes('struggling')) return '#f59e0b'; // Amber
-      if (levelLower.includes('good')) return '#3b82f6'; // Blue
-      if (levelLower.includes('strong')) return '#22c55e'; // Green
-      
-      return '#6b7280'; // Default gray
+      switch(level) {
+        case 'Correct':
+          return '#22c55e'; // Green
+        case 'Incorrect':
+          return '#ef4444'; // Red
+        case 'NotAssessed':
+          return '#6b7280'; // Gray
+        default:
+          return '#6b7280'; // Default gray
+      }
     };
 
     // Process snapshots and submissions
@@ -125,9 +127,9 @@ const TimelineVisualization = ({
       allStudentIds.sort((a, b) => a.id - b.id);
     } else if (sortBy === 'performance') {
       allStudentIds.sort((a, b) => {
-        const aRank = performanceRankMap[a.performance] || -1;
-        const bRank = performanceRankMap[b.performance] || -1;
-        return aRank - bRank;
+        const aRank = performanceRankMap[a.performance] ?? -1;
+        const bRank = performanceRankMap[b.performance] ?? -1;
+        return bRank - aRank; // Sort Correct first, then Incorrect, then NotAssessed
       });
     } else if (sortBy === 'submission-time') {
       allStudentIds.sort((a, b) => {
@@ -313,11 +315,12 @@ const TimelineVisualization = ({
                 return ["Problem Published", "Time: 0 minutes"];
               } else if (datasetIndex === 1 && chartData.snapshotDataset[context.dataIndex]) {
                 const item = chartData.snapshotDataset[context.dataIndex];
+                const performanceText = item.performance === 'NotAssessed' ? 'Not Assessed' : item.performance;
                 return [
                   `Student: ${item.studentId}`, 
                   `Type: ${item.type}`, 
-                  `Time: +${Math.round(item.x)} minutes`, // Show relative time
-                  `Performance: ${item.performance}`, 
+                  `Time: +${Math.round(item.x)} minutes`,
+                  `Status: ${performanceText}`, 
                   'Click to view code'
                 ];
               } else if (datasetIndex === 2 && chartData.submissionDataset[context.dataIndex]) {
@@ -325,7 +328,7 @@ const TimelineVisualization = ({
                 return [
                   `Student: ${item.studentId}`, 
                   `Type: ${item.type}`, 
-                  `Time: +${Math.round(item.x)} minutes` // Show relative time
+                  `Time: +${Math.round(item.x)} minutes`
                 ];
               }
               return '';
