@@ -32,44 +32,51 @@ const PerformanceComparisonChart = ({
     if (!performanceData || !submissionTimes || !individualAssessment) {
       return null;
     }
-    
     // Create sets of student IDs who have submitted
     const submittedStudentIds = new Set(
       submissionTimes.submission_times.map(sub => sub.student_id)
     );
     
-    // Organize performance data
+    // Initialize data structures
     const overallData = {
-      poor: performanceData.poor?.count || 0,
-      struggling: performanceData.struggling?.count || 0,
-      good_progress: performanceData.good_progress?.count || 0,
-      strong: performanceData.strong?.count || 0
+      correct: performanceData.correct?.count || 0,
+      incorrect: performanceData.incorrect?.count || 0,
+      notAssessed: performanceData.not_assessed?.count || 0
     };
     
-    // Initialize submitted and not submitted data
+    // Initialize submitted data - only track assessed submissions
     const submittedData = {
-      poor: 0,
-      struggling: 0,
-      good_progress: 0,
-      strong: 0
+      correct: 0,
+      incorrect: 0,
+      total: 0
     };
     
     const notSubmittedData = {
-      poor: 0,
-      struggling: 0,
-      good_progress: 0,
-      strong: 0
+      notAssessed: 0
     };
     
     // Count performances by submission status
     individualAssessment.forEach(student => {
-      const performanceLevel = student.performance_level.toLowerCase().replace(' ', '_');
+      const performanceLevel = student.performance_level;
+      
       if (submittedStudentIds.has(student.student_id)) {
-        submittedData[performanceLevel]++;
+        submittedData.total++; // Track total submissions
+        if (performanceLevel === 'Correct') {
+          submittedData.correct++;
+        } else if (performanceLevel === 'Incorrect') {
+          submittedData.incorrect++;
+        }
       } else {
-        notSubmittedData[performanceLevel]++;
+        notSubmittedData.notAssessed++;
       }
     });
+
+    // Calculate percentages for submitted data
+    const submittedAssessed = submittedData.correct + submittedData.incorrect;
+    submittedData.correctPercentage = submittedAssessed ? 
+      (submittedData.correct / submittedAssessed) * submittedData.total : 0;
+    submittedData.incorrectPercentage = submittedAssessed ? 
+      (submittedData.incorrect / submittedAssessed) * submittedData.total : 0;
     
     return {
       overallData,
@@ -86,40 +93,31 @@ const PerformanceComparisonChart = ({
       labels: ['Overall', 'Submitted', 'Not Submitted'],
       datasets: [
         {
-          label: 'Strong',
+          label: 'Correct',
           data: [
-            chartData.overallData.strong,
-            chartData.submittedData.strong,
-            chartData.notSubmittedData.strong
+            chartData.overallData.correct,
+            chartData.submittedData.correctPercentage,  // Use scaled percentage
+            0
           ],
           backgroundColor: '#22c55e', // Green
         },
         {
-          label: 'Good Progress',
+          label: 'Incorrect',
           data: [
-            chartData.overallData.good_progress,
-            chartData.submittedData.good_progress,
-            chartData.notSubmittedData.good_progress
-          ],
-          backgroundColor: '#3b82f6', // Blue
-        },
-        {
-          label: 'Struggling',
-          data: [
-            chartData.overallData.struggling,
-            chartData.submittedData.struggling,
-            chartData.notSubmittedData.struggling
-          ],
-          backgroundColor: '#f59e0b', // Amber
-        },
-        {
-          label: 'Poor',
-          data: [
-            chartData.overallData.poor,
-            chartData.submittedData.poor,
-            chartData.notSubmittedData.poor
+            chartData.overallData.incorrect,
+            chartData.submittedData.incorrectPercentage,  // Use scaled percentage
+            0
           ],
           backgroundColor: '#ef4444', // Red
+        },
+        {
+          label: 'Not Assessed',
+          data: [
+            chartData.overallData.notAssessed,
+            0,
+            chartData.notSubmittedData.notAssessed
+          ],
+          backgroundColor: '#6b7280', // Gray
         }
       ]
     };

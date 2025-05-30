@@ -219,7 +219,7 @@ const MisconceptionCard = ({
 
           {misconception.student_ids && (
             <>
-            {/* <div className="affected-students" style={{marginTop: '1rem'}}>
+            <div className="affected-students" style={{marginTop: '1rem'}}>
               <b>Affected Students: </b>
                 {misconception.student_ids.map((studentId, index) => (
                   <span key={studentId}>
@@ -236,7 +236,7 @@ const MisconceptionCard = ({
                     {index < misconception.student_ids.length - 1 ? ', ' : ''}
                   </span>
                 ))}
-            </div> */}
+            </div>
             <div style={{ marginTop: '1.5rem' }}>
   <GroupFeedback misconception={misconception} snapshotMap={snapshotMap} />
 </div>

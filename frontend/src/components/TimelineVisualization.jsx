@@ -33,7 +33,7 @@ const TimelineVisualization = ({
   performanceData,
   problemDescription
 }) => {
-  const [sortBy, setSortBy] = useState('performance'); // Options: 'student-id', 'performance', 'submission-time', 'snapshot-time'
+  const [sortBy, setSortBy] = useState('snapshot-time');
   const [selectedSnapshot, setSelectedSnapshot] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
@@ -48,6 +48,15 @@ const TimelineVisualization = ({
     const submissionDataset = [];
     const connectionLines = [];
     const problemStartPoint = [];
+    
+    // Get the problem start time as the baseline (time 0)
+    const problemStartTime = new Date(problemDescription.timestamp);
+    
+    // Helper function to convert absolute time to relative minutes
+    const getRelativeTime = (timestamp) => {
+      const time = new Date(timestamp);
+      return (time.getTime() - problemStartTime.getTime()) / (1000 * 60); // Convert to minutes
+    };
     
     // Create a map of student IDs to their performance level
     const performanceMap = {};
@@ -144,29 +153,28 @@ const TimelineVisualization = ({
       studentYPositions[student.id] = nextYPosition++;
     });
     
-    // Problem publication point
-    const problemTime = new Date(problemDescription.timestamp);
+    // Problem publication point (always at time 0)
     problemStartPoint.push({
-      x: problemTime,
+      x: 0, // Changed from problemTime to 0
       y: 0,
       label: 'Problem Published'
     });
     
-    // Now populate the datasets using the consistent y-positions
+    // Now populate the datasets using relative time
     codeSnapshots.entries.forEach(entry => {
       const yPosition = studentYPositions[entry.student_id];
       const performanceLevel = performanceMap[entry.student_id];
       const color = getColorForPerformance(performanceLevel);
       
       snapshotDataset.push({
-        x: new Date(entry.timestamp),
+        x: getRelativeTime(entry.timestamp), // Convert to relative time
         y: yPosition,
         studentId: entry.student_id,
         timestamp: entry.timestamp,
         type: 'Snapshot',
         performance: performanceLevel || 'Unknown',
         color,
-        content: entry.content // Store the code content
+        content: entry.content
       });
     });
     
@@ -175,10 +183,10 @@ const TimelineVisualization = ({
       const snapshotEntry = snapshotDataset.find(entry => entry.studentId === submission.student_id);
       
       submissionDataset.push({
-        x: new Date(submission.timestamp), // Changed from submission.submission_times
+        x: getRelativeTime(submission.timestamp), // Convert to relative time
         y: yPosition,
         studentId: submission.student_id,
-        timestamp: submission.timestamp, // Changed from submission.submission_times
+        timestamp: submission.timestamp,
         type: 'Submission',
         performance: snapshotEntry?.performance || 'Unknown'
       });
@@ -188,11 +196,11 @@ const TimelineVisualization = ({
         connectionLines.push({
           studentId: submission.student_id,
           snapshot: {
-            x: new Date(snapshotEntry.timestamp),
+            x: snapshotEntry.x, // Already converted to relative time
             y: yPosition
           },
           submission: {
-            x: new Date(submission.timestamp), // Changed from submission.submission_times
+            x: getRelativeTime(submission.timestamp), // Convert to relative time
             y: yPosition
           }
         });
@@ -204,7 +212,8 @@ const TimelineVisualization = ({
       submissionDataset,
       connectionLines,
       studentYPositions,
-      problemStartPoint
+      problemStartPoint,
+      problemStartTime // Add this for reference
     };
   }, [codeSnapshots, submissionTimes, performanceData, problemDescription, sortBy]);
 
@@ -293,7 +302,7 @@ const TimelineVisualization = ({
     return {
       responsive: true,
       maintainAspectRatio: false,
-      onClick: handleDataPointClick, // Add click handler
+      onClick: handleDataPointClick,
       plugins: {
         tooltip: {
           callbacks: {
@@ -301,46 +310,55 @@ const TimelineVisualization = ({
               const datasetIndex = context.datasetIndex;
               
               if (datasetIndex === 0) {
-                return ["Problem Published", `Time: ${chartData.problemStartPoint[0].x.toLocaleTimeString()}`];
+                return ["Problem Published", "Time: 0 minutes"];
               } else if (datasetIndex === 1 && chartData.snapshotDataset[context.dataIndex]) {
                 const item = chartData.snapshotDataset[context.dataIndex];
-                return [`Student: ${item.studentId}`, `Type: ${item.type}`, `Time: ${new Date(item.timestamp).toLocaleTimeString()}`, `Performance: ${item.performance}`, 'Click to view code'];
+                return [
+                  `Student: ${item.studentId}`, 
+                  `Type: ${item.type}`, 
+                  `Time: +${Math.round(item.x)} minutes`, // Show relative time
+                  `Performance: ${item.performance}`, 
+                  'Click to view code'
+                ];
               } else if (datasetIndex === 2 && chartData.submissionDataset[context.dataIndex]) {
                 const item = chartData.submissionDataset[context.dataIndex];
-                return [`Student: ${item.studentId}`, `Type: ${item.type}`, `Time: ${new Date(item.timestamp).toLocaleTimeString()}`];
+                return [
+                  `Student: ${item.studentId}`, 
+                  `Type: ${item.type}`, 
+                  `Time: +${Math.round(item.x)} minutes` // Show relative time
+                ];
               }
               return '';
             }
           }
         },
         legend: {
-          display: false // This hides the legend from the chart
+          display: false
         },
       },
       scales: {
         x: {
-          type: 'time',
-          time: {
-            unit: 'minute',
-            displayFormats: {
-              minute: 'HH:mm'
-            }
-          },
+          type: 'linear', // Changed from 'time' to 'linear'
           title: {
             display: true,
-            text: 'Time'
+            text: 'Time (minutes from problem start)' // Updated title
           },
-          min: chartData.problemStartPoint[0].x,
+          min: 0, // Always start from 0
           max: (() => {
-            // Find the latest timestamp in the data
-            const allTimestamps = [
+            // Find the latest relative time in the data
+            const allRelativeTimes = [
               ...chartData.snapshotDataset.map(item => item.x),
               ...chartData.submissionDataset.map(item => item.x)
             ];
-            const latestTime = new Date(Math.max(...allTimestamps.map(time => time.getTime())));
-            // Add 15 minutes to the latest time to create space on the right
-            return new Date(latestTime.getTime() + (1 * 60 * 1000));
-          })()
+            const latestTime = Math.max(...allRelativeTimes);
+            // Add 1 minute buffer to the latest time
+            return Math.ceil(latestTime) + 1;
+          })(),
+          ticks: {
+            callback: function(value) {
+              return `${Math.round(value)}m`; // Format as "15m", "30m", etc.
+            }
+          }
         },
         y: {
           title: {

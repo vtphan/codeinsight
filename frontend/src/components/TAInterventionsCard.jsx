@@ -4,7 +4,7 @@ import { Eye, Users } from 'lucide-react';
 import Modal from './Modal';
 import StudentSubmission from './StudentSubmission';
 
-const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes, individualAssessment=[] }) => {
+const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes, individualAssessment=[], onDataUpdate }) => {
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('not-reviewed'); // 'reviewed' or 'not-reviewed'
@@ -206,6 +206,7 @@ const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes, 
             studentSubmissions={codeSnapshots}
             submissionTimes={submissionTimes}
             studentId={selectedStudentId}
+            onDataUpdate={onDataUpdate}
           />
         )}
       </Modal>

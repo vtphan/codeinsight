@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import CodeBlock from './CodeBlock';
 
-const StudentSubmission = ({ studentSubmissions, submissionTimes, studentId, helpRequest=null }) => {
+const StudentSubmission = ({ studentSubmissions, submissionTimes, studentId, helpRequest=null, onDataUpdate }) => {
   const [assessment, setAssessment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionMessage, setSubmissionMessage] = useState('');
@@ -49,6 +49,8 @@ const StudentSubmission = ({ studentSubmissions, submissionTimes, studentId, hel
 
       if (res.ok) {
         setSubmissionMessage('✅ Grade submitted successfully.');
+        console.log('Code graded, refreshing data...');
+        onDataUpdate?.();
       } else if (res.status === 409) {
         setSubmissionMessage('❌ Already Graded.');
       } else {
@@ -81,6 +83,8 @@ const StudentSubmission = ({ studentSubmissions, submissionTimes, studentId, hel
 
       if (response.ok) {
         alert('✅ Inline feedback sent successfully.');
+        console.log('Feedback sent, refreshing data...');
+        onDataUpdate?.();
       } else {
         alert('❌ Failed to send feedback.');
       }
@@ -110,23 +114,21 @@ const StudentSubmission = ({ studentSubmissions, submissionTimes, studentId, hel
     id="assessment"
     value={assessment}
     onChange={(e) => setAssessment(e.target.value)}
-    disabled={!!existingGrade}
+    disabled={existingGrade}
     style={{
       padding: '8px 12px',
       borderRadius: '6px',
       border: '1px solid #ccc',
-      backgroundColor: !!existingGrade ? '#f0f0f0' : '#fff',
-      color: !!existingGrade ? '#888' : '#333',
+      backgroundColor: existingGrade ? '#f0f0f0' : '#fff',
+      color: existingGrade ? '#888' : '#333',
       fontSize: '14px',
       minWidth: '180px',
-      cursor: !!existingGrade ? 'not-allowed' : 'pointer',
+      cursor: existingGrade ? 'not-allowed' : 'pointer',
     }}
   >
           <option value="">Select...</option>
-          <option value="strong">Strong</option>
-          <option value="good_progress">Good Progress</option>
-          <option value="struggling">Struggling</option>
-          <option value="poor">Poor</option>
+          <option value="correct">Correct</option>
+          <option value="incorrect">Incorrect</option>
         </select>
 
         {!existingGrade && (

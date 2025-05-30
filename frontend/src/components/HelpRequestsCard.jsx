@@ -4,7 +4,7 @@ import { Eye, Users } from 'lucide-react';
 import Modal from './Modal';
 import StudentSubmission from './StudentSubmission';
 
-const HelpRequestsCard = ({ taInterventions, codeSnapshots, submissionTimes, individualAssessment=[], helpRequests=[] }) => {
+const HelpRequestsCard = ({ taInterventions, codeSnapshots, submissionTimes, individualAssessment=[], helpRequests=[], onDataUpdate }) => {
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -130,6 +130,7 @@ const HelpRequestsCard = ({ taInterventions, codeSnapshots, submissionTimes, ind
             submissionTimes={submissionTimes}
             studentId={selectedStudentId}
             helpRequest={helpRequestMap[selectedStudentId]}
+            onDataUpdate={onDataUpdate}
           />
         )}
       </Modal>

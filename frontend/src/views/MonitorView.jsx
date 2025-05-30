@@ -5,7 +5,7 @@ import TAInterventionsCard from '../components/TAInterventionsCard';
 import HelpRequestsCard from '../components/HelpRequestsCard';
 import './MonitorView.css';
 
-const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissionTimes, taInterventionTimes }) => {
+const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissionTimes, taInterventionTimes, onDataUpdate }) => {
   const { overall_assessment } = analysisData;
   const helpRequests = taInterventionTimes.interventions.filter(
     (item) => item.help_stat == "Asked for help"
@@ -81,6 +81,7 @@ const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissi
           totalStudents={overall_assessment.total_entries}
           codeSnapshots={codeSnapshots}
           submissionTimes={submissionTimes}
+          onDataUpdate={onDataUpdate}
         />
       </div>
 
@@ -93,6 +94,7 @@ const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissi
           codeSnapshots={codeSnapshots}
           submissionTimes={submissionTimes}
           helpRequests={helpRequests}
+          onDataUpdate={onDataUpdate}
         />
       </div>
     </div>

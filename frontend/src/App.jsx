@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import MonitorView from "./views/MonitorView";
 import AnalyzeView from "./views/AnalyzeView";
 import RespondView from "./views/RespondView";
@@ -30,11 +30,11 @@ function App() {
     setIsRegenerating(true);
   
     const urlParams = new URLSearchParams(window.location.search);
-    // const problemId = urlParams.get("problem_id")
-    const problemId = 18
+    const problemId = urlParams.get("problem_id")
+    // const problemId = 24;
     const regenerate = true;
-    fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
-    // fetch(`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    // fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    fetch(`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
 
       .then((res) => {
         if (!res.ok) throw new Error("Failed to regenerate data");
@@ -63,52 +63,73 @@ function App() {
       });
   };
   
-  
-
-  useEffect(() => {
+  const fetchData = useCallback(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    // const problemId = urlParams.get("problem_id");
-    const problemId = 18
-
+    const problemId = urlParams.get("problem_id")
+    // const problemId = 24; 
     const regenerate = false;
-  
-    const fetchData = () => {
-      fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
-    // fetch(`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
-        .then((res) => {
-          if (!res.ok) throw new Error("Failed to fetch data");
-          return res.json();
-        })
-        .then((data) => {
-          const timestamp = new Date().toLocaleString();
-          console.log(`[${timestamp}] 🔄 Periodic refresh from backend:`, data);
-  
-          Object.keys(localStorage)
-            .filter((key) => key.startsWith("misconception-edit-"))
-            .forEach((key) => localStorage.removeItem(key));
-  
-          setAnalysisData(data.analysisData);
-          setProblemDescription(data.problemDescription);
-          setCodeSnapshots(data.codeSnapshots);
-          setSubmissionTimes(data.submissionTimes);
-          setTaInterventionTimes(data.taInterventions);
-          setError(null); // clear error on success
-        })
-        .catch((err) => {
-          console.error(err);
-          setError(err.message);
-        });
-    };
-  
-    // Fetch once on mount
+
+    // fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    fetch(`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch data");
+        return res.json();
+      })
+      .then((data) => {
+        const timestamp = new Date().toLocaleString();
+        console.log(`[${timestamp}] 🔄 Data refresh from backend:`, data);
+
+        Object.keys(localStorage)
+          .filter((key) => key.startsWith("misconception-edit-"))
+          .forEach((key) => localStorage.removeItem(key));
+
+        setAnalysisData(data.analysisData);
+        setProblemDescription(data.problemDescription);
+        setCodeSnapshots(data.codeSnapshots);
+        setSubmissionTimes(data.submissionTimes);
+        setTaInterventionTimes(data.taInterventions);
+        setError(null);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError(err.message);
+      });
+  }, []); // Empty dependency array since we're using constant values
+
+  // Keep the periodic refresh
+  useEffect(() => {
+    // Initial fetch
     fetchData();
-  
+    
     // Set interval to fetch every 10 seconds
-    const intervalId = setInterval(fetchData, 10000); // 10 seconds
-  
+    const intervalId = setInterval(fetchData, 10000);
+    
     // Cleanup on unmount
     return () => clearInterval(intervalId);
-  }, []);
+  }, [fetchData]);
+
+  // Add event listeners for code grading and feedback
+  useEffect(() => {
+    const handleCodeGraded = () => {
+      console.log('Code graded, refreshing data...');
+      fetchData();
+    };
+
+    const handleFeedbackSent = () => {
+      console.log('Feedback sent, refreshing data...');
+      fetchData();
+    };
+
+    // Add event listeners
+    window.addEventListener('codeGraded', handleCodeGraded);
+    window.addEventListener('feedbackSent', handleFeedbackSent);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('codeGraded', handleCodeGraded);
+      window.removeEventListener('feedbackSent', handleFeedbackSent);
+    };
+  }, [fetchData]);
 
   const addToScreenQueue = (item) => setScreenQueue([...screenQueue, item]);
   const removeFromScreenQueue = (index) => {
@@ -239,7 +260,7 @@ function App() {
     <span style={{ marginLeft: "0.5rem" }}>Processing...</span>
   </div>
 ) : (
-  "Get AI Feedback"
+  "Analyze"
 )}
 </button>
               </nav>
@@ -254,6 +275,7 @@ function App() {
                 codeSnapshots={codeSnapshots}
                 submissionTimes={submissionTimes}
                 taInterventionTimes={taInterventionTimes}
+                onDataUpdate={fetchData}
               />
             )}
             {activeView === "analyze" && (
