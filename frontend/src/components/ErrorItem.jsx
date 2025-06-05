@@ -5,7 +5,7 @@ import CodeBlock from './CodeBlock';
 import Modal from './Modal';
 import StudentSubmission from './StudentSubmission';
 
-const ErrorItem = ({ error, studentSubmissions, submissionTimes }) => {
+const ErrorItem = ({ error, errorNumber, studentSubmissions, submissionTimes }) => {
   const [expanded, setExpanded] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,7 +27,7 @@ const ErrorItem = ({ error, studentSubmissions, submissionTimes }) => {
     <div className="expandable">
       <div className="expandable-header" onClick={toggleExpanded}>
         <div>
-          <strong>{error.category}</strong> - {error.occurrence_percentage}
+          <strong>{errorNumber}: {error.category}</strong> - {error.occurrence_percentage}
         </div>
         {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
       </div>

@@ -5,9 +5,7 @@ import StudentSubmission from './StudentSubmission';
 import Modal from './Modal';
 
 const StudentTable = ({ students, studentSubmissions, submissionTimes }) => {
-  const [sortFieldLower, setSortFieldLower] = useState('performance_level');
   const [sortDirectionLower, setSortDirectionLower] = useState('asc');
-  const [sortFieldUpper, setSortFieldUpper] = useState('performance_level');
   const [sortDirectionUpper, setSortDirectionUpper] = useState('asc');
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,12 +18,13 @@ const StudentTable = ({ students, studentSubmissions, submissionTimes }) => {
     const upper = [];
     
     students.forEach(student => {
-      const level = student.performance_level.toLowerCase();
-      if (level.includes('poor') || level.includes('struggling')) {
+      const level = student.performance_level;
+      if (level === 'Incorrect') {
         lower.push(student);
-      } else if (level.includes('good') || level.includes('strong')) {
+      } else if (level === 'Correct') {
         upper.push(student);
       }
+      // NotAssessed students are ignored
     });
     
     return {
@@ -35,67 +34,49 @@ const StudentTable = ({ students, studentSubmissions, submissionTimes }) => {
   }, [students]);
   
   // Handle sorting for lower performing students
-  const handleSortLower = (field) => {
-    if (field === sortFieldLower) {
-      setSortDirectionLower(sortDirectionLower === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortFieldLower(field);
-      setSortDirectionLower('asc');
-    }
+  const handleSortLower = () => {
+    setSortDirectionLower(sortDirectionLower === 'asc' ? 'desc' : 'asc');
   };
   
   // Handle sorting for upper performing students
-  const handleSortUpper = (field) => {
-    if (field === sortFieldUpper) {
-      setSortDirectionUpper(sortDirectionUpper === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortFieldUpper(field);
-      setSortDirectionUpper('asc');
-    }
+  const handleSortUpper = () => {
+    setSortDirectionUpper(sortDirectionUpper === 'asc' ? 'desc' : 'asc');
   };
   
   // Sort lower performing students
   const sortedLowerStudents = useMemo(() => {
     return [...lowerPerformingStudents].sort((a, b) => {
-      let aValue = a[sortFieldLower];
-      let bValue = b[sortFieldLower];
-      
-      if (typeof aValue === 'string') {
-        aValue = aValue.toLowerCase();
-        bValue = bValue.toLowerCase();
-      }
+      let aValue = a.student_id;
+      let bValue = b.student_id;
       
       if (aValue < bValue) return sortDirectionLower === 'asc' ? -1 : 1;
       if (aValue > bValue) return sortDirectionLower === 'asc' ? 1 : -1;
       return 0;
     });
-  }, [lowerPerformingStudents, sortFieldLower, sortDirectionLower]);
+  }, [lowerPerformingStudents, sortDirectionLower]);
   
   // Sort upper performing students
   const sortedUpperStudents = useMemo(() => {
     return [...upperPerformingStudents].sort((a, b) => {
-      let aValue = a[sortFieldUpper];
-      let bValue = b[sortFieldUpper];
-      
-      if (typeof aValue === 'string') {
-        aValue = aValue.toLowerCase();
-        bValue = bValue.toLowerCase();
-      }
+      let aValue = a.student_id;
+      let bValue = b.student_id;
       
       if (aValue < bValue) return sortDirectionUpper === 'asc' ? -1 : 1;
       if (aValue > bValue) return sortDirectionUpper === 'asc' ? 1 : -1;
       return 0;
     });
-  }, [upperPerformingStudents, sortFieldUpper, sortDirectionUpper]);
+  }, [upperPerformingStudents, sortDirectionUpper]);
   
   // Helper function to get CSS class based on performance level
   const getPerformanceClass = (level) => {
-    const levelLower = level.toLowerCase();
-    if (levelLower.includes('poor')) return 'performance-poor';
-    if (levelLower.includes('struggling')) return 'performance-struggling';
-    if (levelLower.includes('good')) return 'performance-good-progress';
-    if (levelLower.includes('strong')) return 'performance-strong';
-    return '';
+    switch (level) {
+      case 'Incorrect':
+        return 'performance-poor';
+      case 'Correct':
+        return 'performance-strong';
+      default:
+        return '';
+    }
   };
   
   // Handle view button click
@@ -140,7 +121,7 @@ const StudentTable = ({ students, studentSubmissions, submissionTimes }) => {
             onClick={toggleLowerTable}
           >
             <h4 style={{ margin: 0, color: 'var(--warning-color)' }}>
-              Poor + Struggling ({lowerPerformingStudents.length} students)
+              Incorrect ({lowerPerformingStudents.length} students)
             </h4>
             {isLowerTableOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
           </div>
@@ -151,7 +132,7 @@ const StudentTable = ({ students, studentSubmissions, submissionTimes }) => {
                 <thead>
                   <tr>
                     <th 
-                      onClick={() => handleSortLower('student_id')}
+                      onClick={handleSortLower}
                       style={{ 
                         cursor: 'pointer', 
                         padding: '0.75rem',
@@ -160,19 +141,17 @@ const StudentTable = ({ students, studentSubmissions, submissionTimes }) => {
                         textAlign: 'left'
                       }}
                     >
-                      Student ID {sortFieldLower === 'student_id' && (sortDirectionLower === 'asc' ? <ArrowUp size={16} /> : <ArrowDown size={16} />)}
+                      Student ID {sortDirectionLower === 'asc' ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
                     </th>
                     <th 
-                      onClick={() => handleSortLower('performance_level')}
                       style={{ 
-                        cursor: 'pointer', 
                         padding: '0.75rem',
                         backgroundColor: '#f1f5f9',
                         borderBottom: '2px solid var(--border-color)',
                         textAlign: 'left'
                       }}
                     >
-                      Performance {sortFieldLower === 'performance_level' && (sortDirectionLower === 'asc' ? <ArrowUp size={16} /> : <ArrowDown size={16} />)}
+                      Performance
                     </th>
                     <th 
                       style={{ 
@@ -232,7 +211,7 @@ const StudentTable = ({ students, studentSubmissions, submissionTimes }) => {
             onClick={toggleUpperTable}
           >
             <h4 style={{ margin: 0, color: 'var(--success-color)' }}>
-              Good Progress + Strong ({upperPerformingStudents.length} students)
+              Correct ({upperPerformingStudents.length} students)
             </h4>
             {isUpperTableOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
           </div>
@@ -243,7 +222,7 @@ const StudentTable = ({ students, studentSubmissions, submissionTimes }) => {
                 <thead>
                   <tr>
                     <th 
-                      onClick={() => handleSortUpper('student_id')}
+                      onClick={handleSortUpper}
                       style={{ 
                         cursor: 'pointer', 
                         padding: '0.75rem',
@@ -252,19 +231,17 @@ const StudentTable = ({ students, studentSubmissions, submissionTimes }) => {
                         textAlign: 'left'
                       }}
                     >
-                      Student ID {sortFieldUpper === 'student_id' && (sortDirectionUpper === 'asc' ? <ArrowUp size={16} /> : <ArrowDown size={16} />)}
+                      Student ID {sortDirectionUpper === 'asc' ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
                     </th>
                     <th 
-                      onClick={() => handleSortUpper('performance_level')}
                       style={{ 
-                        cursor: 'pointer', 
                         padding: '0.75rem',
                         backgroundColor: '#f1f5f9',
                         borderBottom: '2px solid var(--border-color)',
                         textAlign: 'left'
                       }}
                     >
-                      Performance {sortFieldUpper === 'performance_level' && (sortDirectionUpper === 'asc' ? <ArrowUp size={16} /> : <ArrowDown size={16} />)}
+                      Performance
                     </th>
                     <th 
                       style={{ 

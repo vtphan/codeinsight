@@ -233,24 +233,8 @@ function App() {
                   Monitor
                 </button>
                 <button
-                  className={`nav-tab ${activeView === "analyze" ? "active" : ""}`}
-                  onClick={() => setActiveView("analyze")}
-                  title="mistakes are they making"
-                  disabled={!analysisData.isEnable}
-                >
-                  Respond
-                </button>
-                {/* <button
-                  className={activeView === "respond" ? "active" : ""}
-                  onClick={() => setActiveView("respond")}
-                  title="to address mistakes"
-                  disabled={!analysisData.isEnable}
-                >
-                  Respond
-                </button> */}
-                <button
                   onClick={handleRegenerate}
-                  title="regenerate analysis data"
+                  title="ask AI to analyze the submissions"
                   disabled={isRegenerating}
                   className={`analyze-button ${isRegenerating ? "disabled" : ""}`}
                 >
@@ -260,9 +244,26 @@ function App() {
                       <span style={{ marginLeft: "0.5rem" }}>Processing...</span>
                     </div>
                   ) : (
-                    "Analyze"
+                    "Ask AI"
                   )}
                 </button>
+                <button
+                  className={`nav-tab ${activeView === "analyze" ? "active" : ""}`}
+                  onClick={() => setActiveView("analyze")}
+                  title="mistakes are they making"
+                  disabled={!analysisData.isEnable}
+                >
+                  Analysis
+                </button>
+                {/* <button
+                  className={activeView === "respond" ? "active" : ""}
+                  onClick={() => setActiveView("respond")}
+                  title="to address mistakes"
+                  disabled={!analysisData.isEnable}
+                >
+                  Respond
+                </button> */}
+                
               </nav>
             </div>
           </header>
