@@ -6,6 +6,7 @@ import CorrelationItem from '../components/CorrelationItem';
 import AnalyzeMisconceptionCard from '../components/AnalyzeMisconceptionCard';
 import StudentTable from '../components/StudentTable';
 import { generatePrintableReport } from '../utils/exportUtils';
+import MisconceptionCard from '../components/MisconceptionCard';
 
 const AnalyzeView = ({ analysisData, problemDescription, codeSnapshots, submissionTimes, addToScreenQueue }) => {
   const { 
@@ -120,13 +121,13 @@ const AnalyzeView = ({ analysisData, problemDescription, codeSnapshots, submissi
               </p>
               
               {aggregate_analysis.potential_misconceptions.map((misconception, index) => (
-                <AnalyzeMisconceptionCard 
+                <MisconceptionCard 
                   key={index} 
                   misconception={misconception} 
                   addToScreenQueue={addToScreenQueue}
                   studentSubmissions={codeSnapshots}
                   expanded={true}
-                  // isRespond={true}
+                  isRespond={true}
                   submissionTimes={submissionTimes}
                 />
               ))}

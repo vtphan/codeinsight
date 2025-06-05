@@ -30,11 +30,11 @@ function App() {
     setIsRegenerating(true);
   
     const urlParams = new URLSearchParams(window.location.search);
-    const problemId = urlParams.get("problem_id")
-    // const problemId = 24;
+    // const problemId = urlParams.get("problem_id")
+    const problemId = 24;
     const regenerate = true;
-    // fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
-    fetch(`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    // fetch(`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
 
       .then((res) => {
         if (!res.ok) throw new Error("Failed to regenerate data");
@@ -65,12 +65,12 @@ function App() {
   
   const fetchData = useCallback(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const problemId = urlParams.get("problem_id")
-    // const problemId = 24; 
+    // const problemId = urlParams.get("problem_id")
+    const problemId = 24; 
     const regenerate = false;
 
-    // fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
-    fetch(`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    // fetch(`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch data");
         return res.json();
@@ -226,43 +226,43 @@ function App() {
               />
               <nav className="app-nav">
                 <button
-                  className={activeView === "monitor" ? "active" : ""}
+                  className={`nav-tab ${activeView === "monitor" ? "active" : ""}`}
                   onClick={() => setActiveView("monitor")}
                   title="what students are doing"
                 >
                   Monitor
                 </button>
                 <button
-                  className={activeView === "analyze" ? "active" : ""}
+                  className={`nav-tab ${activeView === "analyze" ? "active" : ""}`}
                   onClick={() => setActiveView("analyze")}
                   title="mistakes are they making"
                   disabled={!analysisData.isEnable}
                 >
-                  Analyze
+                  Respond
                 </button>
-                <button
+                {/* <button
                   className={activeView === "respond" ? "active" : ""}
                   onClick={() => setActiveView("respond")}
                   title="to address mistakes"
                   disabled={!analysisData.isEnable}
                 >
                   Respond
-                </button>
+                </button> */}
                 <button
-  onClick={handleRegenerate}
-  title="regenerate analysis data"
-  disabled={isRegenerating}
-  className={`regenerate-btn ${isRegenerating ? "disabled" : ""}`}
->
-{isRegenerating ? (
-  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-    <div className="spinner-small"></div>
-    <span style={{ marginLeft: "0.5rem" }}>Processing...</span>
-  </div>
-) : (
-  "Analyze"
-)}
-</button>
+                  onClick={handleRegenerate}
+                  title="regenerate analysis data"
+                  disabled={isRegenerating}
+                  className={`analyze-button ${isRegenerating ? "disabled" : ""}`}
+                >
+                  {isRegenerating ? (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div className="spinner-small"></div>
+                      <span style={{ marginLeft: "0.5rem" }}>Processing...</span>
+                    </div>
+                  ) : (
+                    "Analyze"
+                  )}
+                </button>
               </nav>
             </div>
           </header>
@@ -288,7 +288,7 @@ function App() {
                 addToScreenQueue={addToScreenQueue}
               />
             )}
-            {activeView === "respond" && (
+            {/* {activeView === "respond" && (
               <RespondView
                 analysisData={analysisData}
                 problemDescription={problemDescription}
@@ -300,7 +300,7 @@ function App() {
                 moveInScreenQueue={moveInScreenQueue}
                 onStartPresentation={togglePresentationMode}
               />
-            )}
+            )} */}
           </main>
         </>
       )}
