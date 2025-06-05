@@ -16,15 +16,6 @@ const AnalyzeView = ({ analysisData, problemDescription, codeSnapshots, submissi
   
   const [activeTab, setActiveTab] = useState('errors');
   
-  // Export handlers
-  // const handleExportJson = () => {
-  //   exportAsJson(analysisData, `${analysisData.problem_summary.title.replace(/\s+/g, '_')}_analysis.json`);
-  // };
-  
-  // const handleExportCsv = () => {
-  //   exportAnalysisAsCsv(analysisData, `${analysisData.problem_summary.title.replace(/\s+/g, '_')}_analysis.csv`);
-  // };
-  
   const handlePrintableReport = () => {
     generatePrintableReport(analysisData, problemDescription);
   };
@@ -46,20 +37,6 @@ const AnalyzeView = ({ analysisData, problemDescription, codeSnapshots, submissi
             }}
           >
             Common Errors
-          </button>
-          <button 
-            className={`tab-btn ${activeTab === 'correlations' ? 'active' : ''}`}
-            onClick={() => setActiveTab('correlations')}
-            style={{ 
-              padding: '0.75rem 1.5rem', 
-              background: 'transparent', 
-              border: 'none',
-              borderBottom: activeTab === 'correlations' ? '3px solid var(--primary-color)' : '3px solid transparent',
-              fontWeight: activeTab === 'correlations' ? 'bold' : 'normal',
-              cursor: 'pointer'
-            }}
-          >
-            Error Correlations
           </button>
           <button 
             className={`tab-btn ${activeTab === 'misconceptions' ? 'active' : ''}`}
@@ -87,25 +64,8 @@ const AnalyzeView = ({ analysisData, problemDescription, codeSnapshots, submissi
               {aggregate_analysis.top_errors.map((error, index) => (
                 <ErrorItem 
                   key={index} 
-                  error={error} 
-                  addToScreenQueue={addToScreenQueue}
-                  studentSubmissions={codeSnapshots}
-                  submissionTimes={submissionTimes}
-                />
-              ))}
-            </div>
-          )}
-          
-          {activeTab === 'correlations' && (
-            <div className="correlations-tab">
-              <p style={{ marginBottom: '1rem' }}>
-                These error correlations indicate potential relationships between different types of errors:
-              </p>
-              
-              {aggregate_analysis.error_correlations.map((correlation, index) => (
-                <CorrelationItem 
-                  key={index} 
-                  correlation={correlation} 
+                  error={error}
+                  errorNumber={index + 1}
                   addToScreenQueue={addToScreenQueue}
                   studentSubmissions={codeSnapshots}
                   submissionTimes={submissionTimes}
@@ -135,6 +95,26 @@ const AnalyzeView = ({ analysisData, problemDescription, codeSnapshots, submissi
           )}
         </div>
       </div>
+
+      {activeTab === 'errors' && (
+        <div className="error-correlations card">
+          <h3 className="section-title">Error Correlations</h3>
+          <p style={{ marginBottom: '1rem' }}>
+            These error correlations indicate potential relationships between different types of errors:
+          </p>
+          
+          {aggregate_analysis.error_correlations.map((correlation, index) => (
+            <CorrelationItem 
+              key={index} 
+              correlation={correlation} 
+              addToScreenQueue={addToScreenQueue}
+              studentSubmissions={codeSnapshots}
+              submissionTimes={submissionTimes}
+              errorNumbers={true}
+            />
+          ))}
+        </div>
+      )}
 
       <div className="student-list card">
         <h3 className="section-title">Code Snapshots</h3>

@@ -24,46 +24,49 @@ const CorrelationItem = ({ correlation, studentSubmissions, submissionTimes }) =
   };
 
   return (
-    <div className="expandable">
-      <div className="expandable-header" onClick={toggleExpanded}>
-        <div>
-          <strong>{correlation.correlated_errors.join(' & ')}</strong> - {correlation.correlation_percentage}
-        </div>
-        {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+    <div>
+      <div>
+        <strong>{correlation.correlated_errors.join(' & ')}</strong> - {correlation.correlation_percentage} : 
+        <p>{correlation.hypothesis}</p>
       </div>
-      
-      {expanded && (
-        <div className="expandable-content">
-          <p>{correlation.hypothesis}</p>
-          
-          {correlation.example_code && (
-            <div className="code-example">
-              <h4>Example:</h4>
-              <CodeBlock code={correlation.example_code} />
-            </div>
-          )}
-          
-          {correlation.student_ids && (
-            <div className="affected-students">
-              <b>Affected Students: </b>
-                {correlation.student_ids.map((studentId, index) => (
-                  <span key={studentId}>
-                    <a 
-                      href="#" 
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleStudentClick(studentId);
-                      }}
-                      style={{ color: 'var(--primary-color)', textDecoration: 'underline', cursor: 'pointer' }}
-                    >
-                      {studentId}
-                    </a>
-                    {index < correlation.student_ids.length - 1 ? ', ' : ''}
-                  </span>
-                ))}
-            </div>
-          )}
-          
+
+      <div className="expandable">
+        <div className="expandable-header" onClick={toggleExpanded}>
+          <div>
+            <strong>Example Code</strong>
+          </div>
+          {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+        </div>
+        
+        {expanded && (
+          <div className="expandable-content">
+            {correlation.example_code && (
+              <div className="code-example">
+                <CodeBlock code={correlation.example_code} />
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {correlation.student_ids && (
+        <div className="affected-students" style={{ paddingLeft: '1rem', marginTop: '1rem' }}>
+          <b>Affected Students: </b>
+          {correlation.student_ids.map((studentId, index) => (
+            <span key={studentId}>
+              <a 
+                href="#" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleStudentClick(studentId);
+                }}
+                style={{ color: 'var(--primary-color)', textDecoration: 'underline', cursor: 'pointer' }}
+              >
+                {studentId}
+              </a>
+              {index < correlation.student_ids.length - 1 ? ', ' : ''}
+            </span>
+          ))}
         </div>
       )}
 
