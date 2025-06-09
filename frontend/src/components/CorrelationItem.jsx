@@ -24,7 +24,7 @@ const CorrelationItem = ({ correlation, studentSubmissions, submissionTimes }) =
   };
 
   return (
-    <div>
+    <div style={{ marginBottom: '1.5rem' }}>
       <div>
         <strong>{correlation.correlated_errors.join(' & ')}</strong> - {correlation.correlation_percentage} : 
         <p>{correlation.hypothesis}</p>

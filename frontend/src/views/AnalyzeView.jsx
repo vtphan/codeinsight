@@ -1,6 +1,6 @@
 // src/views/AnalyzeView.jsx
 import { useState } from 'react';
-import { Download, Printer } from 'lucide-react';
+import { Download, Printer, RefreshCw, Sparkles } from 'lucide-react';
 import ErrorItem from '../components/ErrorItem';
 import CorrelationItem from '../components/CorrelationItem';
 import AnalyzeMisconceptionCard from '../components/AnalyzeMisconceptionCard';
@@ -8,20 +8,96 @@ import StudentTable from '../components/StudentTable';
 import { generatePrintableReport } from '../utils/exportUtils';
 import MisconceptionCard from '../components/MisconceptionCard';
 
-const AnalyzeView = ({ analysisData, problemDescription, codeSnapshots, submissionTimes, addToScreenQueue }) => {
+const AnalyzeView = ({ analysisData, problemDescription, codeSnapshots, submissionTimes, addToScreenQueue, handleRegenerate }) => {
   const { 
     individual_assessment, 
     aggregate_analysis 
   } = analysisData;
   
   const [activeTab, setActiveTab] = useState('errors');
+  const [isRegenerating, setIsRegenerating] = useState(false);
   
   const handlePrintableReport = () => {
     generatePrintableReport(analysisData, problemDescription);
   };
 
+  const handleRegenerateWithState = () => {
+    setIsRegenerating(true);
+    handleRegenerate().finally(() => {
+      console.log("Regenerated");
+      setIsRegenerating(false);
+    });
+  };
+
+  const hasNoAnalysis = !aggregate_analysis?.top_errors && !aggregate_analysis?.error_correlations && !aggregate_analysis?.potential_misconceptions;
+
+  const geminiButtonStyle = {
+    backgroundColor: '#4285f4', // Google blue
+    color: 'white',
+    padding: '0.5rem 0.5rem',
+    fontSize: '1rem',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s',
+    ':hover': {
+      backgroundColor: '#3367d6' // Darker blue on hover
+    }
+  };
+
+  if (hasNoAnalysis) {
+    return (
+      <div className="analyze-view" style={{ textAlign: 'center', padding: '2rem' }}>
+        <h2>No AI Analysis Available</h2>
+        <p style={{ margin: '1rem 0' }}>Click the button below to generate AI analysis of student snapshots.</p>
+        <button 
+          onClick={handleRegenerateWithState}
+          disabled={isRegenerating}
+          className="btn primary"
+          style={geminiButtonStyle}
+        >
+          {isRegenerating ? (
+            <>
+              <div className="spinner-small"></div>
+              <span>Generating Analysis...</span>
+            </>
+          ) : (
+            <>
+              <Sparkles size={17} />
+              <span>Generate Analysis</span>
+            </>
+          )}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="analyze-view">     
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+        <button 
+          onClick={handleRegenerateWithState}
+          disabled={isRegenerating}
+          className="btn"
+          style={geminiButtonStyle}
+        >
+          {isRegenerating ? (
+            <>
+              <div className="spinner-small"></div>
+              <span>Regenerating...</span>
+            </>
+          ) : (
+            <>
+              <Sparkles size={17} />
+              <span>Regenerate Analysis</span>
+            </>
+          )}
+        </button>
+      </div>
+
       <div className="analysis-tabs card">
         <div className="tabs-header" style={{ display: 'flex', borderBottom: '1px solid var(--border-color)', marginBottom: '1rem' }}>
           <button 

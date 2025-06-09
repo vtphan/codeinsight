@@ -21,19 +21,18 @@ function App() {
   const [submissionTimes, setSubmissionTimes] = useState(null);
   const [taInterventionTimes, setTaInterventionTimes] = useState(null);
   const [error, setError] = useState(null);
-  const [isRegenerating, setIsRegenerating] = useState(false);
 
   const handleRegenerate = () => {
     const confirmed = window.confirm("This will send student codesnapshots to AI for analysis. Are you sure you want to do it?");
-    if (!confirmed) return;
-  
-    setIsRegenerating(true);
+    if (!confirmed){
+      return Promise.reject(new Error("User cancelled"));
+    }
   
     const urlParams = new URLSearchParams(window.location.search);
     // const problemId = urlParams.get("problem_id")
     const problemId = 24;
     const regenerate = true;
-    fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    return fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
     // fetch(`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
 
       .then((res) => {
@@ -57,9 +56,7 @@ function App() {
       .catch((err) => {
         console.error(err);
         setError(err.message);
-      })
-      .finally(() => {
-        setIsRegenerating(false);
+        throw err; // Re-throw to be handled by the component
       });
   };
   
@@ -233,25 +230,9 @@ function App() {
                   Monitor
                 </button>
                 <button
-                  onClick={handleRegenerate}
-                  title="ask AI to analyze the submissions"
-                  disabled={isRegenerating}
-                  className={`analyze-button ${isRegenerating ? "disabled" : ""}`}
-                >
-                  {isRegenerating ? (
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <div className="spinner-small"></div>
-                      <span style={{ marginLeft: "0.5rem" }}>Processing...</span>
-                    </div>
-                  ) : (
-                    "Ask AI"
-                  )}
-                </button>
-                <button
                   className={`nav-tab ${activeView === "analyze" ? "active" : ""}`}
                   onClick={() => setActiveView("analyze")}
                   title="mistakes are they making"
-                  disabled={!analysisData.isEnable}
                 >
                   Analysis
                 </button>
@@ -287,6 +268,7 @@ function App() {
                 submissionTimes={submissionTimes}
                 screenQueue={screenQueue}
                 addToScreenQueue={addToScreenQueue}
+                handleRegenerate={handleRegenerate}
               />
             )}
             {/* {activeView === "respond" && (
@@ -305,12 +287,6 @@ function App() {
           </main>
         </>
       )}
-      {isRegenerating && (
-      <div className="regenerating-overlay">
-        <div className="spinner"></div>
-        <p>Regenerating data...</p>
-      </div>
-    )}
     </div>
   );
 }
