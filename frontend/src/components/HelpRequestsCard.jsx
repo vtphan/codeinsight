@@ -113,7 +113,7 @@ const HelpRequestsCard = ({ taInterventions, codeSnapshots, submissionTimes, ind
               ))}
             </div>
           ) : (
-            <p>No notifications at this time.</p>
+            <p>No help requests at this time.</p>
           )
           }
       </div>

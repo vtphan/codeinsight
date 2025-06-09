@@ -62,7 +62,7 @@ const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissi
         </div>
       
         <div className="submission-timeline-container card">
-          <h3 className="section-title">Activity</h3>
+          <h3 className="section-title">Snapshot Activity</h3>
           <TimelineVisualization 
             codeSnapshots={codeSnapshots}
             submissionTimes={submissionTimes}
@@ -86,7 +86,7 @@ const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissi
       </div>
 
       <div className="additional-info card">
-        <h3 className="section-title">Notifications</h3>
+        <h3 className="section-title">Help Requests</h3>
          <HelpRequestsCard 
           taInterventions={taInterventionTimes}
           individualAssessment={analysisData.individual_assessment}

@@ -33,7 +33,8 @@ const TimelineVisualization = ({
   performanceData,
   problemDescription
 }) => {
-  const [sortBy, setSortBy] = useState('snapshot-time');
+  // Change the default and remove the state since we don't need it anymore
+  const sortBy = 'snapshot-time';
   const [selectedSnapshot, setSelectedSnapshot] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
@@ -397,63 +398,48 @@ const TimelineVisualization = ({
       <div style={{ height: '550px' }}>
         <Scatter data={{ datasets }} options={optionsConfig} />
       </div>
-      <div className="sorting-controls" style={{ 
-        marginTop: '1rem',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-      }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', fontSize: '0.8rem' }}>
-        <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-          <input
-            type="radio"
-            name="sortBy"
-            value="performance"
-            checked={sortBy === 'performance'}
-            onChange={(e) => setSortBy(e.target.value)}
-            style={{ marginRight: '0.35rem' }}
-          />
-          Performance
-        </label>
-
-        <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-          <input
-            type="radio"
-            name="sortBy"
-            value="submission-time"
-            checked={sortBy === 'submission-time'}
-            onChange={(e) => setSortBy(e.target.value)}
-            style={{ marginRight: '0.35rem' }}
-          />
-          Submission
-        </label>
-        
-        <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-          <input
-            type="radio"
-            name="sortBy"
-            value="snapshot-time"
-            checked={sortBy === 'snapshot-time'}
-            onChange={(e) => setSortBy(e.target.value)}
-            style={{ marginRight: '0.35rem' }}
-          />
-          Snapshot
-        </label>
-
-        <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-          <input
-            type="radio"
-            name="sortBy"
-            value="student-id"
-            checked={sortBy === 'student-id'}
-            onChange={(e) => setSortBy(e.target.value)}
-            style={{ marginRight: '0.35rem' }}
-          />
-          Student
-        </label>
-      </div>
-      </div>
       
+      {/* Add legend */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: '20px',
+        marginTop: '20px',
+        fontSize: '0.9rem'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{
+            width: '12px',
+            height: '12px',
+            borderRadius: '50%',
+            backgroundColor: '#22c55e',
+            marginRight: '8px'
+          }}></div>
+          <span>Correct</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{
+            width: '12px',
+            height: '12px',
+            borderRadius: '50%',
+            backgroundColor: '#ef4444',
+            marginRight: '8px'
+          }}></div>
+          <span>Incorrect</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{
+            width: '12px',
+            height: '12px',
+            borderRadius: '50%',
+            backgroundColor: '#6b7280',
+            marginRight: '8px'
+          }}></div>
+          <span>Not Assessed</span>
+        </div>
+      </div>
+
       {/* Modal for displaying code snapshot */}
       <Modal 
         isOpen={isModalOpen} 
