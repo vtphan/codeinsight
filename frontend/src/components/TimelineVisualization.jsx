@@ -37,7 +37,7 @@ const TimelineVisualization = ({
   const sortBy = 'snapshot-time';
   const [selectedSnapshot, setSelectedSnapshot] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   // Process data for visualization
   const chartData = useMemo(() => {
     if (!codeSnapshots || !codeSnapshots.entries || !submissionTimes || !submissionTimes.submission_times || !performanceData || !problemDescription) {
@@ -164,13 +164,22 @@ const TimelineVisualization = ({
     });
     
     // Now populate the datasets using relative time
+    const submissionTimestamps = new Set(
+      submissionTimes.submission_times.map(submission => submission.timestamp)
+    );
+
     codeSnapshots.entries.forEach(entry => {
+      // Skip this snapshot if it's also a submission
+      if (submissionTimestamps.has(entry.timestamp)) {
+        return;
+      }
+
       const yPosition = studentYPositions[entry.student_id];
       const performanceLevel = performanceMap[entry.student_id];
       const color = getColorForPerformance(performanceLevel);
       
       snapshotDataset.push({
-        x: getRelativeTime(entry.timestamp), // Convert to relative time
+        x: getRelativeTime(entry.timestamp),
         y: yPosition,
         studentId: entry.student_id,
         timestamp: entry.timestamp,
@@ -183,27 +192,34 @@ const TimelineVisualization = ({
     
     submissionTimes.submission_times.forEach(submission => {
       const yPosition = studentYPositions[submission.student_id];
-      const snapshotEntry = snapshotDataset.find(entry => entry.studentId === submission.student_id);
+      const performanceLevel = performanceMap[submission.student_id];
+      
+      // Find the matching snapshot for this submission
+      const matchingSnapshot = codeSnapshots.entries.find(
+        entry => entry.student_id === submission.student_id && entry.timestamp === submission.timestamp
+      );
       
       submissionDataset.push({
-        x: getRelativeTime(submission.timestamp), // Convert to relative time
+        x: getRelativeTime(submission.timestamp),
         y: yPosition,
         studentId: submission.student_id,
         timestamp: submission.timestamp,
         type: 'Submission',
-        performance: snapshotEntry?.performance || 'Unknown'
+        performance: performanceLevel || 'Unknown',
+        content: matchingSnapshot?.content || '', // Store the code content with the submission
       });
       
       // Create connection line if both snapshot and submission exist
-      if (snapshotEntry) {
+      const lastSnapshot = snapshotDataset.find(entry => entry.studentId === submission.student_id);
+      if (lastSnapshot) {
         connectionLines.push({
           studentId: submission.student_id,
           snapshot: {
-            x: snapshotEntry.x, // Already converted to relative time
+            x: lastSnapshot.x,
             y: yPosition
           },
           submission: {
-            x: getRelativeTime(submission.timestamp), // Convert to relative time
+            x: getRelativeTime(submission.timestamp),
             y: yPosition
           }
         });
@@ -225,11 +241,24 @@ const TimelineVisualization = ({
     if (elements.length > 0) {
       const { datasetIndex, index } = elements[0];
       
-      // Check if it's a code snapshot point (dataset index 1)
       if (datasetIndex === 1 && chartData && chartData.snapshotDataset[index]) {
+        // Handle snapshot click
         const snapshot = chartData.snapshotDataset[index];
         setSelectedSnapshot(snapshot);
         setIsModalOpen(true);
+      } else if (datasetIndex === 2 && chartData && chartData.submissionDataset[index]) {
+        // Handle submission click
+        const submission = chartData.submissionDataset[index];
+        if (submission.content) {
+          const color = submission.performance === 'Correct' ? '#22c55e' : 
+                       submission.performance === 'Incorrect' ? '#ef4444' : 
+                       '#6b7280';
+          setSelectedSnapshot({
+            ...submission,
+            color
+          });
+          setIsModalOpen(true);
+        }
       }
     }
   }, [chartData]);
@@ -261,7 +290,7 @@ const TimelineVisualization = ({
           x: item.x,
           y: item.y
         })),
-        backgroundColor: chartData.snapshotDataset.map(item => item.color),
+        backgroundColor: '#6b7280', // All snapshots in grey
         pointRadius: 6,
         pointStyle: 'circle'
       },
@@ -271,9 +300,20 @@ const TimelineVisualization = ({
           x: item.x,
           y: item.y
         })),
-        backgroundColor: '#6b7280',
-        pointRadius: 6,
-        pointStyle: 'triangle'
+        backgroundColor: chartData.submissionDataset.map(item => {
+          const performanceLevel = item.performance;
+          switch(performanceLevel) {
+            case 'Correct':
+              return '#22c55e'; // Green
+            case 'Incorrect':
+              return '#ef4444'; // Red
+            case 'NotAssessed':
+            default:
+              return '#6b7280'; // Gray
+          }
+        }),
+        pointRadius: 8,
+        pointStyle: 'rect'
       }
     ];
     
@@ -399,7 +439,7 @@ const TimelineVisualization = ({
         <Scatter data={{ datasets }} options={optionsConfig} />
       </div>
       
-      {/* Add legend */}
+      {/* Update legend */}
       <div style={{
         display: 'flex',
         justifyContent: 'center',
@@ -413,30 +453,37 @@ const TimelineVisualization = ({
             width: '12px',
             height: '12px',
             borderRadius: '50%',
-            backgroundColor: '#22c55e',
-            marginRight: '8px'
-          }}></div>
-          <span>Correct</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div style={{
-            width: '12px',
-            height: '12px',
-            borderRadius: '50%',
-            backgroundColor: '#ef4444',
-            marginRight: '8px'
-          }}></div>
-          <span>Incorrect</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div style={{
-            width: '12px',
-            height: '12px',
-            borderRadius: '50%',
             backgroundColor: '#6b7280',
             marginRight: '8px'
           }}></div>
-          <span>Not Assessed</span>
+          <span>Code Snapshot</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', borderLeft: '1px solid #e5e7eb', paddingLeft: '20px' }}>
+          <div style={{
+            width: '12px',
+            height: '12px',
+            backgroundColor: '#22c55e',
+            marginRight: '8px'
+          }}></div>
+          <span>Correct Submission</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{
+            width: '12px',
+            height: '12px',
+            backgroundColor: '#ef4444',
+            marginRight: '8px'
+          }}></div>
+          <span>Incorrect Submission</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{
+            width: '12px',
+            height: '12px',
+            backgroundColor: '#6b7280',
+            marginRight: '8px'
+          }}></div>
+          <span>Not Assessed Submission</span>
         </div>
       </div>
 

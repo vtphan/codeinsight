@@ -8,6 +8,7 @@ const StudentSubmission = ({ studentSubmissions, submissionTimes, studentId, hel
   const [editedCode, setEditedCode] = useState('');
   const [isEditing, setIsEditing] = useState(false);
 
+  console.log("studentSubmissions", studentSubmissions, "submissionTimes", submissionTimes, "studentId", studentId, "helpRequest", helpRequest, "onDataUpdate", onDataUpdate)
   const snapshot = studentSubmissions?.entries?.find(
     entry => entry.student_id === studentId
   );

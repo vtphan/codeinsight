@@ -46,35 +46,61 @@ const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissi
                 {helpRequestsCount}
               </div>
             </div>
+
+            <div className="stat-card">
+              <h3 className="stat-title">Correct</h3>
+              <div className="stat-value">
+                {analysisData.individual_assessment.filter(
+                  (item) => item.performance_level === "Correct"
+                ).length}
+              </div>
+            </div>
+
+            <div className="stat-card">
+              <h3 className="stat-title">Incorrect</h3>
+              <div className="stat-value">
+                {analysisData.individual_assessment.filter(
+                  (item) => item.performance_level === "Incorrect"
+                ).length}
+              </div>
+            </div>
+
+            <div className="stat-card">
+              <h3 className="stat-title">Not Assessed</h3>
+              <div className="stat-value">
+                {analysisData.individual_assessment.filter(
+                  (item) => item.performance_level === "NotAssessed"
+                ).length}
+              </div>
+            </div>
           </div>
-      <div className="two-column">
-        
-        <div className="monitor-stats card">
-          
-          <div className="performance-chart-container">
-          <h3 className="section-title">Performance</h3>
-            <PerformanceComparisonChart 
-              performanceData={overall_assessment.performance_distribution}
-              submissionTimes={submissionTimes}
-              individualAssessment={analysisData.individual_assessment}
-            />
-          </div>
-        </div>
       
-        <div className="submission-timeline-container card">
-          <h3 className="section-title">Snapshot Activity</h3>
-          <TimelineVisualization 
-            codeSnapshots={codeSnapshots}
+      {/* Performance Stats Section */}
+      {/* <div className="monitor-stats card">
+        <div className="performance-chart-container">
+          <h3 className="section-title">Performance</h3>
+          <PerformanceComparisonChart 
+            performanceData={overall_assessment.performance_distribution}
             submissionTimes={submissionTimes}
-            performanceData={analysisData.individual_assessment}
-            problemDescription={problemDescription}
+            individualAssessment={analysisData.individual_assessment}
           />
         </div>
+      </div> */}
+      
+      {/* Full Width Snapshot Activity Section */}
+      <div className="submission-timeline-container card">
+        <h3 className="section-title">Snapshot Activity</h3>
+        <TimelineVisualization 
+          codeSnapshots={codeSnapshots}
+          submissionTimes={submissionTimes}
+          performanceData={analysisData.individual_assessment}
+          problemDescription={problemDescription}
+        />
       </div>
 
-      {/* TA Interventions Section - Now as a separate row below the two-column layout */}
+      {/* TA Interventions Section */}
       <div className="card" style={{ marginTop: '20px' }}>
-        <h3 className="section-title">Students' Code Snapshot</h3>
+        <h3 className="section-title">Submissions</h3>
         <TAInterventionsCard 
           taInterventions={taInterventionTimes}
           individualAssessment={analysisData.individual_assessment}
