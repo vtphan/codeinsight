@@ -9,13 +9,24 @@ const StudentSubmission = ({ studentSubmissions, submissionTimes, studentId, hel
   const [isEditing, setIsEditing] = useState(false);
 
   console.log("studentSubmissions", studentSubmissions, "submissionTimes", submissionTimes, "studentId", studentId, "helpRequest", helpRequest, "onDataUpdate", onDataUpdate)
-  const snapshot = studentSubmissions?.entries?.find(
-    entry => entry.student_id === studentId
-  );
+  
+  // Find the latest submission time for this student
+  const submission = submissionTimes?.submission_times
+    ?.filter(sub => sub.student_id === studentId)
+    ?.reduce((latest, current) => {
+      if (!latest || new Date(current.timestamp) > new Date(latest.timestamp)) {
+        return current;
+      }
+      return latest;
+    }, null);
 
-  const submission = submissionTimes?.submission_times?.find(
-    sub => sub.student_id === studentId
-  );
+  // Find the snapshot that matches the submission timestamp
+  const snapshot = submission 
+    ? studentSubmissions?.entries?.find(
+        entry => entry.student_id === studentId && 
+                new Date(entry.timestamp).getTime() === new Date(submission.timestamp).getTime()
+      )
+    : null;
 
   const problemID = new URLSearchParams(window.location.search).get("problem_id");
 
@@ -59,6 +70,7 @@ const StudentSubmission = ({ studentSubmissions, submissionTimes, studentId, hel
       }
     } catch (error) {
       setSubmissionMessage('❌ Error occurred while submitting.');
+      console.error('Error submitting grade:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -89,8 +101,9 @@ const StudentSubmission = ({ studentSubmissions, submissionTimes, studentId, hel
       } else {
         alert('❌ Failed to send feedback.');
       }
-    } catch (err) {
+    } catch (error) {
       alert('❌ Error occurred while sending feedback.');
+      console.error('Error sending feedback:', error);
     }
   };
 

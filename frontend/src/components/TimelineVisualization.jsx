@@ -87,6 +87,16 @@ const TimelineVisualization = ({
       }
     };
 
+    // First, find the latest submission for each student
+    const latestSubmissions = new Map();
+    submissionTimes.submission_times.forEach(submission => {
+      const studentId = submission.student_id;
+      const currentSubmission = latestSubmissions.get(studentId);
+      if (!currentSubmission || new Date(submission.timestamp) > new Date(currentSubmission.timestamp)) {
+        latestSubmissions.set(studentId, submission);
+      }
+    });
+
     // Process snapshots and submissions
     const processedStudents = new Set();
     let studentYPositions = {};
@@ -95,6 +105,7 @@ const TimelineVisualization = ({
     // First, collect all student IDs
     const allStudentIds = [];
     
+    // Add students from snapshots
     codeSnapshots.entries.forEach(entry => {
       if (!processedStudents.has(entry.student_id)) {
         processedStudents.add(entry.student_id);
@@ -106,19 +117,20 @@ const TimelineVisualization = ({
       }
     });
     
-    submissionTimes.submission_times.forEach(submission => {
+    // Add any remaining students from submissions
+    Array.from(latestSubmissions.values()).forEach(submission => {
       if (!processedStudents.has(submission.student_id)) {
         processedStudents.add(submission.student_id);
         allStudentIds.push({
           id: submission.student_id,
-          submissionTime: new Date(submission.timestamp), // Changed from submission.submission_times
+          submissionTime: new Date(submission.timestamp),
           performance: performanceMap[submission.student_id] || 'Unknown'
         });
       } else {
         // Update the existing entry with submission time
         const studentEntry = allStudentIds.find(entry => entry.id === submission.student_id);
         if (studentEntry) {
-          studentEntry.submissionTime = new Date(submission.timestamp); // Changed from submission.submission_times
+          studentEntry.submissionTime = new Date(submission.timestamp);
         }
       }
     });
@@ -130,15 +142,13 @@ const TimelineVisualization = ({
       allStudentIds.sort((a, b) => {
         const aRank = performanceRankMap[a.performance] ?? -1;
         const bRank = performanceRankMap[b.performance] ?? -1;
-        return bRank - aRank; // Sort Correct first, then Incorrect, then NotAssessed
+        return bRank - aRank;
       });
     } else if (sortBy === 'submission-time') {
       allStudentIds.sort((a, b) => {
-        // Students who didn't submit come last
         if (!a.submissionTime && !b.submissionTime) return 0;
         if (!a.submissionTime) return 1;
         if (!b.submissionTime) return -1;
-        
         return a.submissionTime - b.submissionTime;
       });
     } else if (sortBy === 'snapshot-time') {
@@ -146,7 +156,6 @@ const TimelineVisualization = ({
         if (!a.snapshotTime && !b.snapshotTime) return 0;
         if (!a.snapshotTime) return 1;
         if (!b.snapshotTime) return -1;
-        
         return a.snapshotTime - b.snapshotTime;
       });
     }
@@ -163,19 +172,27 @@ const TimelineVisualization = ({
       label: 'Problem Published'
     });
     
-    // Now populate the datasets using relative time
-    const submissionTimestamps = new Set(
-      submissionTimes.submission_times.map(submission => submission.timestamp)
-    );
-
+    // Process snapshots and submissions
     codeSnapshots.entries.forEach(entry => {
-      // Skip this snapshot if it's also a submission
-      if (submissionTimestamps.has(entry.timestamp)) {
+      const studentId = entry.student_id;
+      const latestSubmission = latestSubmissions.get(studentId);
+      
+      // Skip if this snapshot is after the student's final submission
+      if (latestSubmission && new Date(entry.timestamp) > new Date(latestSubmission.timestamp)) {
         return;
       }
 
-      const yPosition = studentYPositions[entry.student_id];
-      const performanceLevel = performanceMap[entry.student_id];
+      // Skip if this snapshot is at the same time as any submission for this student
+      const isSubmissionTime = Array.from(latestSubmissions.values()).some(submission => 
+        submission.student_id === studentId && 
+        new Date(submission.timestamp).getTime() === new Date(entry.timestamp).getTime()
+      );
+      if (isSubmissionTime) {
+        return;
+      }
+
+      const yPosition = studentYPositions[studentId];
+      const performanceLevel = performanceMap[studentId];
       const color = getColorForPerformance(performanceLevel);
       
       snapshotDataset.push({
@@ -190,30 +207,41 @@ const TimelineVisualization = ({
       });
     });
     
-    submissionTimes.submission_times.forEach(submission => {
-      const yPosition = studentYPositions[submission.student_id];
-      const performanceLevel = performanceMap[submission.student_id];
+    // Add only the latest submission for each student
+    Array.from(latestSubmissions.values()).forEach(submission => {
+      const studentId = submission.student_id;
+      const yPosition = studentYPositions[studentId];
+      const performanceLevel = performanceMap[studentId];
       
       // Find the matching snapshot for this submission
-      const matchingSnapshot = codeSnapshots.entries.find(
-        entry => entry.student_id === submission.student_id && entry.timestamp === submission.timestamp
+      const submissionSnapshot = codeSnapshots.entries.find(
+        entry => entry.student_id === studentId && 
+                new Date(entry.timestamp).getTime() === new Date(submission.timestamp).getTime()
       );
       
       submissionDataset.push({
         x: getRelativeTime(submission.timestamp),
         y: yPosition,
-        studentId: submission.student_id,
+        studentId: studentId,
         timestamp: submission.timestamp,
         type: 'Submission',
         performance: performanceLevel || 'Unknown',
-        content: matchingSnapshot?.content || '', // Store the code content with the submission
+        content: submissionSnapshot?.content || ''
       });
       
-      // Create connection line if both snapshot and submission exist
-      const lastSnapshot = snapshotDataset.find(entry => entry.studentId === submission.student_id);
+      // Create connection line from the last snapshot before submission to the submission
+      const lastSnapshot = snapshotDataset
+        .filter(entry => entry.studentId === studentId && new Date(entry.timestamp) <= new Date(submission.timestamp))
+        .reduce((latest, current) => {
+          if (!latest || new Date(current.timestamp) > new Date(latest.timestamp)) {
+            return current;
+          }
+          return latest;
+        }, null);
+
       if (lastSnapshot) {
         connectionLines.push({
-          studentId: submission.student_id,
+          studentId: studentId,
           snapshot: {
             x: lastSnapshot.x,
             y: yPosition
@@ -232,7 +260,7 @@ const TimelineVisualization = ({
       connectionLines,
       studentYPositions,
       problemStartPoint,
-      problemStartTime // Add this for reference
+      problemStartTime
     };
   }, [codeSnapshots, submissionTimes, performanceData, problemDescription, sortBy]);
 

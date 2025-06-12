@@ -4,51 +4,54 @@ import { Eye, Users } from 'lucide-react';
 import Modal from './Modal';
 import StudentSubmission from './StudentSubmission';
 
-const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes, individualAssessment=[], onDataUpdate }) => {
+const TAInterventionsCard = ({ codeSnapshots, submissionTimes, individualAssessment=[], onDataUpdate }) => {
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('not-reviewed'); // 'reviewed' or 'not-reviewed'
+  const [activeTab, setActiveTab] = useState('not-reviewed');
 
-  // Get submission status for all students
-  const studentSubmissionStatus = useMemo(() => {
-    if (!submissionTimes?.submission_times) {
-      return {};
+  // Get final submissions for each student
+  const submissionData = useMemo(() => {
+    if (!submissionTimes?.submission_times || !codeSnapshots?.entries || !individualAssessment) {
+      return { reviewed: [], notReviewed: [] };
     }
-    
-    // Create a map of student IDs to submission status
-    const statusMap = {};
+
+    // Group submissions by student and find the latest for each
+    const latestSubmissions = new Map();
     submissionTimes.submission_times.forEach(submission => {
-      statusMap[submission.student_id] = true; // Has submitted
-    });
-    
-    return statusMap;
-  }, [submissionTimes]);
-
-  // Get the list of students who haven't been reviewed
-  const notReviewedStudents = useMemo(() => {
-    if (!taInterventions?.interventions || !codeSnapshots?.entries || !individualAssessment) {
-      return [];
-    }
-
-    // Get all student IDs from code snapshots
-    const allStudentIds = new Set();
-    codeSnapshots.entries.forEach(entry => {
-      allStudentIds.add(entry.student_id);
-    });
-    
-    // Get all reviewed student IDs
-    const reviewedStudentIds = new Set();
-    individualAssessment.forEach(assessment => {
-      if (assessment.performance_level != "NotAssessed") {
-        reviewedStudentIds.add(assessment.student_id);
+      const studentId = submission.student_id;
+      const currentSubmission = latestSubmissions.get(studentId);
+      if (!currentSubmission || new Date(submission.timestamp) > new Date(currentSubmission.timestamp)) {
+        latestSubmissions.set(studentId, submission);
       }
     });
-    
-    // Filter to get students who haven't been reviewed
-    return Array.from(allStudentIds)
-      .filter(id => !reviewedStudentIds.has(id))
-      .sort((a, b) => a - b);
-  }, [taInterventions, codeSnapshots, individualAssessment]);
+
+    // Get assessment status for each student
+    const assessmentMap = new Map(
+      individualAssessment.map(assessment => [assessment.student_id, assessment.performance_level])
+    );
+
+    // Process each final submission
+    const submissions = Array.from(latestSubmissions.values()).map(submission => {
+      // Find the matching snapshot for this submission
+      const submissionSnapshot = codeSnapshots.entries.find(
+        entry => entry.student_id === submission.student_id && 
+                new Date(entry.timestamp).getTime() === new Date(submission.timestamp).getTime()
+      );
+
+      return {
+        studentId: submission.student_id,
+        timestamp: submission.timestamp,
+        code: submissionSnapshot?.content || '',
+        performance: assessmentMap.get(submission.student_id) || 'NotAssessed'
+      };
+    });
+
+    // Split into reviewed and not reviewed
+    return {
+      reviewed: submissions.filter(s => s.performance !== 'NotAssessed'),
+      notReviewed: submissions.filter(s => s.performance === 'NotAssessed')
+    };
+  }, [submissionTimes, codeSnapshots, individualAssessment]);
 
   const handleStudentClick = (studentId) => {
     setSelectedStudentId(studentId);
@@ -59,20 +62,15 @@ const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes, 
     setIsModalOpen(false);
   };
 
-  // Calculate percentages
-  const reviewedCount = individualAssessment.filter(
-    (item) => item.performance_level != "NotAssessed"
-  ).length || 0;
-
-  // Get the border color based on submission status
-  const getBorderStyle = (studentId) => {
-    // Check if student has submitted
-    const hasSubmitted = studentSubmissionStatus[studentId];
-    
-    if (hasSubmitted) {
-      return '1px solid var(--border-color)';
-    } else {
-      return '1px solid #f59e0b'; // Amber color for not submitted
+  // Get color based on performance
+  const getPerformanceColor = (performance) => {
+    switch(performance) {
+      case 'Correct':
+        return '#22c55e';
+      case 'Incorrect':
+        return '#ef4444';
+      default:
+        return '#6b7280';
     }
   };
 
@@ -98,7 +96,7 @@ const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes, 
           }}
         >
           <Eye size={16} />
-          Reviewed ({reviewedCount})
+          Reviewed ({submissionData.reviewed.length})
         </button>
         <button
           className={`tab-btn ${activeTab === 'not-reviewed' ? 'active' : ''}`}
@@ -118,33 +116,19 @@ const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes, 
           }}
         >
           <Users size={16} />
-          Not Reviewed ({notReviewedStudents.length})
+          Not Reviewed ({submissionData.notReviewed.length})
         </button>
-      </div>
-      
-      {/* Legend for border colors */}
-      <div style={{ 
-        display: 'flex', 
-        gap: '1rem', 
-        fontSize: '0.7rem', 
-        marginBottom: '0.5rem',
-        justifyContent: 'flex-end' 
-      }}>
       </div>
       
       {/* Content area */}
       <div className="students-list" style={{ maxHeight: '250px', overflowY: 'auto' }}>
         {activeTab === 'reviewed' ? (
-          // Reviewed students
-          individualAssessment.filter(
-            (item) => item.performance_level != "NotAssessed"
-          ).length > 0 ? (
+          // Reviewed submissions
+          submissionData.reviewed.length > 0 ? (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-              {individualAssessment.filter(
-                (item) => item.performance_level != "NotAssessed"
-              ).map((assessment) => (
+              {submissionData.reviewed.map((submission) => (
                 <div 
-                  key={assessment.student_id}
+                  key={submission.studentId}
                   style={{ 
                     backgroundColor: 'var(--background-color)', 
                     padding: '0.3rem 0.5rem',
@@ -153,25 +137,25 @@ const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes, 
                     alignItems: 'center',
                     gap: '0.5rem',
                     cursor: 'pointer',
-                    border: getBorderStyle(assessment.student_id),
+                    border: `2px solid ${getPerformanceColor(submission.performance)}`,
                     fontSize: '0.7rem' 
                   }}
-                  onClick={() => handleStudentClick(assessment.student_id)}
+                  onClick={() => handleStudentClick(submission.studentId)}
                 >
-                  <span>{assessment.student_id}</span>
+                  <span>{submission.studentId}</span>
                 </div>
               ))}
             </div>
           ) : (
-            <p>No students have been reviewed yet.</p>
+            <p>No submissions have been reviewed yet.</p>
           )
         ) : (
-          // Students not reviewed
-          notReviewedStudents.length > 0 ? (
+          // Not reviewed submissions
+          submissionData.notReviewed.length > 0 ? (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-              {notReviewedStudents.map((studentId) => (
+              {submissionData.notReviewed.map((submission) => (
                 <div 
-                  key={studentId}
+                  key={submission.studentId}
                   style={{ 
                     backgroundColor: 'var(--background-color)', 
                     padding: '0.3rem 0.5rem',
@@ -180,31 +164,61 @@ const TAInterventionsCard = ({ taInterventions, codeSnapshots, submissionTimes, 
                     alignItems: 'center',
                     gap: '0.5rem',
                     cursor: 'pointer',
-                    border: getBorderStyle(studentId),
+                    border: '2px solid #6b7280',
                     fontSize: '0.7rem' 
                   }}
-                  onClick={() => handleStudentClick(studentId)}
+                  onClick={() => handleStudentClick(submission.studentId)}
                 >
-                  <span>{studentId}</span>
+                  <span>{submission.studentId}</span>
                 </div>
               ))}
             </div>
           ) : (
-            <p>All students have been reviewed.</p>
+            <p>No submissions pending review.</p>
           )
         )}
       </div>
       
-      {/* Modal for viewing student submission */}
+      {/* Modal for viewing submission code */}
       <Modal 
         isOpen={isModalOpen} 
         onClose={handleCloseModal}
-        title={`Student #${selectedStudentId} Code`}
+        title={`Student #${selectedStudentId} Final Submission`}
       >
         {selectedStudentId && (
           <StudentSubmission 
-            studentSubmissions={codeSnapshots}
-            submissionTimes={submissionTimes}
+            studentSubmissions={{
+              entries: [
+                // Find the final submission snapshot
+                (() => {
+                  const latestSubmission = submissionTimes.submission_times
+                    .filter(sub => sub.student_id === selectedStudentId)
+                    .reduce((latest, current) => {
+                      if (!latest || new Date(current.timestamp) > new Date(latest.timestamp)) {
+                        return current;
+                      }
+                      return latest;
+                    }, null);
+
+                  return codeSnapshots.entries.find(entry => 
+                    entry.student_id === selectedStudentId && 
+                    new Date(entry.timestamp).getTime() === new Date(latestSubmission?.timestamp).getTime()
+                  );
+                })()
+              ].filter(Boolean)
+            }}
+            submissionTimes={{
+              submission_times: [
+                submissionTimes.submission_times
+                  .filter(sub => sub.student_id === selectedStudentId)
+                  .reduce((latest, current) => {
+                    if (!latest || new Date(current.timestamp) > new Date(latest.timestamp)) {
+                      return current;
+                    }
+                    return latest;
+                  }, null)
+              ].filter(Boolean)
+            }}
             studentId={selectedStudentId}
             onDataUpdate={onDataUpdate}
           />
