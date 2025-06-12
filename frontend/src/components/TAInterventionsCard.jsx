@@ -137,7 +137,7 @@ const TAInterventionsCard = ({ codeSnapshots, submissionTimes, individualAssessm
                     alignItems: 'center',
                     gap: '0.5rem',
                     cursor: 'pointer',
-                    border: `2px solid ${getPerformanceColor(submission.performance)}`,
+                    border: `1px solid ${getPerformanceColor(submission.performance)}`,
                     fontSize: '0.7rem' 
                   }}
                   onClick={() => handleStudentClick(submission.studentId)}
@@ -164,7 +164,7 @@ const TAInterventionsCard = ({ codeSnapshots, submissionTimes, individualAssessm
                     alignItems: 'center',
                     gap: '0.5rem',
                     cursor: 'pointer',
-                    border: '2px solid #6b7280',
+                    border: '1px solid #6b7280',
                     fontSize: '0.7rem' 
                   }}
                   onClick={() => handleStudentClick(submission.studentId)}

@@ -30,7 +30,7 @@ function App() {
   
     const urlParams = new URLSearchParams(window.location.search);
     // const problemId = urlParams.get("problem_id")
-    const problemId = 31;
+    const problemId = 23;
     const regenerate = true;
     return fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
     // return fetch(`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
@@ -63,7 +63,7 @@ function App() {
   const fetchData = useCallback(() => {
     const urlParams = new URLSearchParams(window.location.search);
     // const problemId = urlParams.get("problem_id")
-    const problemId = 31; 
+    const problemId = 23; 
     const regenerate = false;
 
     fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)

@@ -1,8 +1,11 @@
 // src/views/MonitorView.jsx - updated
+import { useState } from 'react';
 import TimelineVisualization from '../components/TimelineVisualization';
 import PerformanceComparisonChart from '../components/PerformanceComparisonChart';
 import TAInterventionsCard from '../components/TAInterventionsCard';
 import HelpRequestsCard from '../components/HelpRequestsCard';
+import ViewToggle from '../components/ViewToggle';
+import StatsBarChart from '../components/StatsBarChart';
 import './MonitorView.css';
 
 const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissionTimes, taInterventionTimes, onDataUpdate }) => {
@@ -10,70 +13,70 @@ const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissi
   const helpRequests = taInterventionTimes.interventions.filter(
     (item) => item.help_stat == "Asked for help"
   )
-  const helpRequestsCount = helpRequests.length
+  const [statsView, setStatsView] = useState('bar');
 
+  // Get unique student submissions count
+  const uniqueSubmittedStudents = new Set(submissionTimes.submission_times.map(
+    submission => submission.student_id
+  )).size;
+
+  // Calculate total students who haven't submitted
+  const totalStudents = overall_assessment.total_entries;
+  const notSubmittedCount = totalStudents - uniqueSubmittedStudents;
+
+  // Stats for bar chart
+  const statsData = {
+    correct: analysisData.individual_assessment.filter(
+      (item) => item.performance_level === "Correct"
+    ).length,
+    incorrect: analysisData.individual_assessment.filter(
+      (item) => item.performance_level === "Incorrect"
+    ).length,
+    notAssessed: analysisData.individual_assessment.filter(
+      (item) => item.performance_level === "NotAssessed"
+    ).length,
+    notSubmitted: notSubmittedCount
+  };
 
   return (
     <div className="monitor-view">
-      <div className="stats-row">
-            <div className="stat-card">
-              <h3 className="stat-title">Students</h3>
-              <div className="stat-value">
-                {overall_assessment.total_entries}
-              </div>
-            </div>
-            
-            <div className="stat-card">
-              <h3 className="stat-title">Submissions</h3>
-              <div className="stat-value">
-                {submissionTimes.submission_times.length}
-              </div>
-            </div>
-            
-            <div className="stat-card">
-              <h3 className="stat-title">Reviewed</h3>
-              <div className="stat-value">
-                {/* exclude items with ""performance_level": "NotAssessed"" */}
-                {analysisData.individual_assessment.filter(
-                  (item) => item.performance_level != "NotAssessed"
-                ).length}
-              </div>
-            </div>
-
-            <div className="stat-card">
-              <h3 className="stat-title">Help Requests</h3>
-              <div className="stat-value">
-                {helpRequestsCount}
-              </div>
-            </div>
-
-            <div className="stat-card">
-              <h3 className="stat-title">Correct</h3>
-              <div className="stat-value">
-                {analysisData.individual_assessment.filter(
-                  (item) => item.performance_level === "Correct"
-                ).length}
-              </div>
-            </div>
-
-            <div className="stat-card">
-              <h3 className="stat-title">Incorrect</h3>
-              <div className="stat-value">
-                {analysisData.individual_assessment.filter(
-                  (item) => item.performance_level === "Incorrect"
-                ).length}
-              </div>
-            </div>
-
-            <div className="stat-card">
-              <h3 className="stat-title">Not Assessed</h3>
-              <div className="stat-value">
-                {analysisData.individual_assessment.filter(
-                  (item) => item.performance_level === "NotAssessed"
-                ).length}
-              </div>
+      <ViewToggle view={statsView} onViewChange={setStatsView} />
+      
+      {statsView === 'bar' ? (
+        <div className="card">
+          <StatsBarChart stats={statsData} />
+        </div>
+      ) : (
+        <div className="stats-row" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+          <div className="stat-card">
+            <h3 className="stat-title">Correct</h3>
+            <div className="stat-value">
+              {statsData.correct}
             </div>
           </div>
+
+          <div className="stat-card">
+            <h3 className="stat-title">Incorrect</h3>
+            <div className="stat-value">
+              {statsData.incorrect}
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <h3 className="stat-title">Not Assessed</h3>
+            <div className="stat-value">
+              {statsData.notAssessed}
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <h3 className="stat-title">Not Submitted</h3>
+            <div className="stat-value">
+              {statsData.notSubmitted}
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Performance Stats Section */}
       {/* <div className="monitor-stats card">
