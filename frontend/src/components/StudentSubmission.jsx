@@ -8,7 +8,6 @@ const StudentSubmission = ({ studentSubmissions, submissionTimes, studentId, hel
   const [editedCode, setEditedCode] = useState('');
   const [isEditing, setIsEditing] = useState(false);
 
-  console.log("studentSubmissions", studentSubmissions, "submissionTimes", submissionTimes, "studentId", studentId, "helpRequest", helpRequest, "onDataUpdate", onDataUpdate)
   
   // Find the latest submission time for this student
   const submission = submissionTimes?.submission_times
@@ -63,8 +62,6 @@ const StudentSubmission = ({ studentSubmissions, submissionTimes, studentId, hel
         setSubmissionMessage('✅ Grade submitted successfully.');
         console.log('Code graded, refreshing data...');
         onDataUpdate?.();
-      } else if (res.status === 409) {
-        setSubmissionMessage('❌ Already Graded.');
       } else {
         setSubmissionMessage('❌ Failed to submit grade.');
       }
@@ -125,48 +122,46 @@ const StudentSubmission = ({ studentSubmissions, submissionTimes, studentId, hel
       <div style={{ marginBottom: '1rem' }}>
         <label htmlFor="assessment"><strong>Assessment:</strong>{' '}</label>
         <select
-    id="assessment"
-    value={assessment}
-    onChange={(e) => setAssessment(e.target.value)}
-    disabled={existingGrade}
-    style={{
-      padding: '8px 12px',
-      borderRadius: '6px',
-      border: '1px solid #ccc',
-      backgroundColor: existingGrade ? '#f0f0f0' : '#fff',
-      color: existingGrade ? '#888' : '#333',
-      fontSize: '14px',
-      minWidth: '180px',
-      cursor: existingGrade ? 'not-allowed' : 'pointer',
-    }}
-  >
+          id="assessment"
+          value={assessment}
+          onChange={(e) => setAssessment(e.target.value)}
+          style={{
+            padding: '8px 12px',
+            borderRadius: '6px',
+            border: '1px solid #ccc',
+            backgroundColor: '#fff',
+            color: '#333',
+            fontSize: '14px',
+            minWidth: '180px',
+            cursor: 'pointer',
+          }}
+        >
           <option value="">Select...</option>
           <option value="correct">Correct</option>
           <option value="incorrect">Incorrect</option>
         </select>
 
-        {!existingGrade && (
-  <button
-    onClick={handleGradeSubmit}
-    disabled={!assessment || isSubmitting}
-    style={{
-      marginLeft: '1rem',
-      padding: '8px 16px',
-      borderRadius: '6px',
-      border: 'none',
-      backgroundColor: !assessment || isSubmitting ? '#90caf9' : '#1976d2',
-      color: 'white',
-      fontWeight: 'bold',
-      fontSize: '14px',
-      cursor: !assessment || isSubmitting ? 'not-allowed' : 'pointer',
-      opacity: !assessment || isSubmitting ? 0.6 : 1,
-      transition: 'background-color 0.3s ease, opacity 0.2s ease',
-    }}
-  >
-    {isSubmitting ? 'Submitting...' : '🚀 Submit Grade'}
-  </button>
-)}
-
+        {assessment && (
+          <button
+            onClick={handleGradeSubmit}
+            disabled={isSubmitting}
+            style={{
+              marginLeft: '1rem',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              border: 'none',
+              backgroundColor: isSubmitting ? '#90caf9' : '#1976d2',
+              color: 'white',
+              fontWeight: 'bold',
+              fontSize: '14px',
+              cursor: isSubmitting ? 'not-allowed' : 'pointer',
+              opacity: isSubmitting ? 0.6 : 1,
+              transition: 'background-color 0.3s ease, opacity 0.2s ease',
+            }}
+          >
+            {isSubmitting ? 'Submitting...' : '🚀 Submit Grade'}
+          </button>
+        )}
 
         {submissionMessage && (
           <p style={{ marginTop: '0.5rem' }}>{submissionMessage}</p>
