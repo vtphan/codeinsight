@@ -109,7 +109,8 @@ const AnalyzeView = ({ analysisData, problemDescription, codeSnapshots, submissi
               border: 'none',
               borderBottom: activeTab === 'errors' ? '3px solid var(--primary-color)' : '3px solid transparent',
               fontWeight: activeTab === 'errors' ? 'bold' : 'normal',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              color: 'var(--text-color, #1e293b)'
             }}
           >
             Common Errors
@@ -123,7 +124,8 @@ const AnalyzeView = ({ analysisData, problemDescription, codeSnapshots, submissi
               border: 'none',
               borderBottom: activeTab === 'misconceptions' ? '3px solid var(--primary-color)' : '3px solid transparent',
               fontWeight: activeTab === 'misconceptions' ? 'bold' : 'normal',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              color: 'var(--text-color, #1e293b)'
             }}
           >
             Potential Misconceptions

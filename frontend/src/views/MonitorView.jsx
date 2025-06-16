@@ -1,5 +1,5 @@
 // src/views/MonitorView.jsx - updated
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TimelineVisualization from '../components/TimelineVisualization';
 import PerformanceComparisonChart from '../components/PerformanceComparisonChart';
 import TAInterventionsCard from '../components/TAInterventionsCard';
@@ -13,7 +13,17 @@ const MonitorView = ({ analysisData, problemDescription, codeSnapshots, submissi
   const helpRequests = taInterventionTimes.interventions.filter(
     (item) => item.help_stat == "Asked for help"
   )
-  const [statsView, setStatsView] = useState('bar');
+  
+  // Initialize statsView from localStorage or default to 'bar'
+  const [statsView, setStatsView] = useState(() => {
+    const savedView = localStorage.getItem('monitor-stats-view');
+    return savedView || 'bar';
+  });
+
+  // Save to localStorage whenever statsView changes
+  useEffect(() => {
+    localStorage.setItem('monitor-stats-view', statsView);
+  }, [statsView]);
 
   // Get unique student submissions count
   const uniqueSubmittedStudents = new Set(submissionTimes.submission_times.map(

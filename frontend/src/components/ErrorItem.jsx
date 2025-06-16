@@ -1,14 +1,32 @@
 // src/components/ErrorItem.jsx
-import { useState } from 'react';
-import { ChevronDown, ChevronUp, PlusCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronDown, ChevronUp, PlusCircle, Edit2, Check } from 'lucide-react';
 import CodeBlock from './CodeBlock';
 import Modal from './Modal';
 import StudentSubmission from './StudentSubmission';
+import GroupFeedback from './GroupFeedback';
+import EditableCodeBlock from './EditableCodeBlock';
 
-const ErrorItem = ({ error, errorNumber, studentSubmissions, submissionTimes }) => {
+const ErrorItem = ({ error, errorNumber, studentSubmissions, submissionTimes, addToScreenQueue }) => {
+  const storageKey = `error-edit-${error.category}-${errorNumber}`;
+  const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+  
   const [expanded, setExpanded] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Editable state similar to MisconceptionCard
+  const [editableDescription, setEditableDescription] = useState(saved.description || error.description || '');
+  const [editableExampleCode, setEditableExampleCode] = useState(
+    saved.exampleCode ||
+    (Array.isArray(error.example_code)
+      ? error.example_code.join('\n')
+      : error.example_code || '')
+  );
+  
+  // Edit mode states
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [isEditingExampleCode, setIsEditingExampleCode] = useState(false);
 
   const toggleExpanded = () => {
     setExpanded(!expanded);
@@ -23,6 +41,43 @@ const ErrorItem = ({ error, errorNumber, studentSubmissions, submissionTimes }) 
     setIsModalOpen(false);
   };
 
+  const handleAddToScreen = () => {
+    addToScreenQueue({
+      type: 'error',
+      title: `${errorNumber}: ${error.category}`,
+      description: editableDescription,
+      codeExample: editableExampleCode,
+      percentage: error.occurrence_percentage,
+    });
+  };
+
+  const resetDraft = () => {
+    localStorage.removeItem(storageKey);
+    
+    setEditableDescription(error.description || '');
+    setEditableExampleCode(
+      Array.isArray(error.example_code)
+        ? error.example_code.join('\n')
+        : error.example_code || ''
+    );
+  };
+
+  // Create snapshot map for GroupFeedback component
+  const snapshotMap = studentSubmissions?.entries
+    ? Object.fromEntries(
+        studentSubmissions.entries.map(entry => [entry.student_id, entry])
+      )
+    : {};
+
+  // Save to localStorage when editable content changes
+  useEffect(() => {
+    const data = {
+      description: editableDescription,
+      exampleCode: editableExampleCode,
+    };
+    localStorage.setItem(storageKey, JSON.stringify(data));
+  }, [storageKey, editableDescription, editableExampleCode]);
+
   return (
     <div className="expandable">
       <div className="expandable-header" onClick={toggleExpanded}>
@@ -34,36 +89,89 @@ const ErrorItem = ({ error, errorNumber, studentSubmissions, submissionTimes }) 
       
       {expanded && (
         <div className="expandable-content">
-          <p>{error.description}</p>
+          <div className="description">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <h4>Description:</h4>
+              <button 
+                onClick={() => setIsEditingDescription(!isEditingDescription)} 
+                className="btn-icon"
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary-color)' }}
+              >
+                {isEditingDescription ? <Check size={16} /> : <Edit2 size={16} />}
+              </button>
+            </div>
+            {isEditingDescription ? (
+              <textarea
+                value={editableDescription}
+                onChange={(e) => setEditableDescription(e.target.value)}
+                className="editable-textarea"
+                style={{ width: '100%', minHeight: '80px', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border-color)', fontFamily: 'inherit', fontSize: 'inherit' }}
+              />
+            ) : (
+              <p>{editableDescription}</p>
+            )}
+          </div>
           
           {error.example_code && (
             <div className="code-example">
-              <h4>Example:</h4>
-              <CodeBlock code={error.example_code} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
+                <h4>Example:</h4>
+                <button 
+                  onClick={() => setIsEditingExampleCode(!isEditingExampleCode)} 
+                  className="btn-icon"
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary-color)' }}
+                >
+                  {isEditingExampleCode ? <Check size={16} /> : <Edit2 size={16} />}
+                </button>
+              </div>
+              {isEditingExampleCode ? (
+                <EditableCodeBlock
+                  code={editableExampleCode}
+                  onChange={setEditableExampleCode}
+                />
+              ) : (
+                <CodeBlock code={editableExampleCode} />
+              )}
             </div>
           )}
           
           {error.student_ids && (
-            <div className="affected-students">
-              <b>Affected Students: </b>
-                {error.student_ids.map((studentId, index) => (
-                  <span key={studentId}>
-                    <a 
-                      href="#" 
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleStudentClick(studentId);
-                      }}
-                      style={{ color: 'var(--primary-color)', textDecoration: 'underline', cursor: 'pointer' }}
-                    >
-                      {studentId}
-                    </a>
-                    {index < error.student_ids.length - 1 ? ', ' : ''}
-                  </span>
-                ))}
-            </div>
+            <>
+              <div className="affected-students" style={{marginTop: '1rem'}}>
+                <b>Affected Students: </b>
+                  {error.student_ids.map((studentId, index) => (
+                    <span key={studentId}>
+                      <a 
+                        href="#" 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleStudentClick(studentId);
+                        }}
+                        style={{ color: 'var(--primary-color)', textDecoration: 'underline', cursor: 'pointer' }}
+                      >
+                        {studentId}
+                      </a>
+                      {index < error.student_ids.length - 1 ? ', ' : ''}
+                    </span>
+                  ))}
+              </div>
+              <div style={{ marginTop: '1.5rem' }}>
+                <GroupFeedback misconception={error} snapshotMap={snapshotMap} />
+              </div>
+            </>
           )}
-          
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '1rem' }}>
+            <button 
+              className="btn btn-primary" 
+              onClick={handleAddToScreen}
+            >
+              Add to Screen
+            </button>
+            <button className="btn btn-secondary" onClick={resetDraft}>
+              Reset
+            </button>
+          </div>
         </div>
       )}
 
