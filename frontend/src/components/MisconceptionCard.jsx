@@ -7,6 +7,7 @@ import StudentSubmission from './StudentSubmission';
 import EditableCodeBlock from './EditableCodeBlock';
 import { useEffect } from 'react';
 import GroupFeedback from './GroupFeedback';
+import GroupFeedbackModal from './GroupFeedbackModal';
 
 const MisconceptionCard = ({ 
   misconception, 
@@ -21,6 +22,7 @@ const MisconceptionCard = ({
   const [expanded, setExpanded] = useState(initialExpanded);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isGroupFeedbackModalOpen, setIsGroupFeedbackModalOpen] = useState(false);
 
   const [editableExplanation, setEditableExplanation] = useState(saved.explanation || misconception.suggested_explanation_for_students || '');
   const [editableErrorCode, setEditableErrorCode] = useState(
@@ -45,7 +47,6 @@ const MisconceptionCard = ({
   const toggleExpanded = () => setExpanded(!expanded);
 
   const handleAddToScreen = () => {
-    // localStorage.removeItem(storageKey); // clear saved draft
     addToScreenQueue({
       type: 'misconception',
       title: misconception.misconception,
@@ -56,10 +57,10 @@ const MisconceptionCard = ({
       percentage: misconception.occurrence_percentage,
     });
   };
-  
+
   const resetDraft = () => {
     localStorage.removeItem(storageKey);
-  
+    
     setEditableExplanation(misconception.suggested_explanation_for_students || '');
     setEditableErrorCode(
       Array.isArray(misconception.example_code_error)
@@ -77,6 +78,14 @@ const MisconceptionCard = ({
   const handleStudentClick = (studentId) => {
     setSelectedStudentId(studentId);
     setIsModalOpen(true);
+  };
+
+  const handleOpenGroupFeedbackModal = () => {
+    setIsGroupFeedbackModalOpen(true);
+  };
+
+  const handleCloseGroupFeedbackModal = () => {
+    setIsGroupFeedbackModalOpen(false);
   };
 
   const snapshotMap = studentSubmissions?.entries
@@ -114,33 +123,32 @@ const MisconceptionCard = ({
         <div className={isRespond ? '' : 'expandable-content'}>
           {misconception.explanation_diagnostic && (
             <div className="diagnostic">
-              <h4>Diagnostic:</h4>
               <p>{misconception.explanation_diagnostic}</p>
             </div>
           )}
 
           {misconception.suggested_explanation_for_students && (
             <div className="explanation">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
-                <h4>Suggested Explanation for Students:</h4>
+              <h4 style={{ marginTop: '1rem', marginBottom: '0.5rem' }}>Suggested Explanation:</h4>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                {isEditingExplanation ? (
+                  <textarea
+                    value={editableExplanation}
+                    onChange={(e) => setEditableExplanation(e.target.value)}
+                    className="editable-textarea"
+                    style={{ flex: 1, minHeight: '100px', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border-color)', fontFamily: 'inherit', fontSize: 'inherit' }}
+                  />
+                ) : (
+                  <p style={{ flex: 1, margin: 0 }}>{editableExplanation}</p>
+                )}
                 <button 
                   onClick={() => setIsEditingExplanation(!isEditingExplanation)} 
                   className="btn-icon"
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary-color)' }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary-color)', flexShrink: 0 }}
                 >
                   {isEditingExplanation ? <Check size={16} /> : <Edit2 size={16} />}
                 </button>
               </div>
-              {isEditingExplanation ? (
-                <textarea
-                  value={editableExplanation}
-                  onChange={(e) => setEditableExplanation(e.target.value)}
-                  className="editable-textarea"
-                  style={{ width: '100%', minHeight: '100px', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border-color)', fontFamily: 'inherit', fontSize: 'inherit', marginTop: '0.5rem' }}
-                />
-              ) : (
-                <p>{editableExplanation}</p>
-              )}
             </div>
           )}
 
@@ -194,31 +202,47 @@ const MisconceptionCard = ({
 
           {misconception.follow_up_question && (
             <div className="follow-up">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
-                <h4>Follow-up Question:</h4>
+              <h4 style={{ marginTop: '1rem', marginBottom: '0.5rem' }}>Follow-up Question:</h4>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                {isEditingFollowUp ? (
+                  <textarea
+                    value={editableFollowUp}
+                    onChange={(e) => setEditableFollowUp(e.target.value)}
+                    className="editable-textarea"
+                    style={{ flex: 1, minHeight: '60px', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border-color)', fontFamily: 'inherit', fontSize: 'inherit' }}
+                  />
+                ) : (
+                  <p style={{ flex: 1, margin: 0 }}>{editableFollowUp}</p>
+                )}
                 <button 
                   onClick={() => setIsEditingFollowUp(!isEditingFollowUp)} 
                   className="btn-icon"
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary-color)' }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary-color)', flexShrink: 0 }}
                 >
                   {isEditingFollowUp ? <Check size={16} /> : <Edit2 size={16} />}
                 </button>
               </div>
-              {isEditingFollowUp ? (
-                <textarea
-                  value={editableFollowUp}
-                  onChange={(e) => setEditableFollowUp(e.target.value)}
-                  className="editable-textarea"
-                  style={{ width: '100%', minHeight: '60px', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border-color)', fontFamily: 'inherit', fontSize: 'inherit', marginTop: '0.5rem' }}
-                />
-              ) : (
-                <p>{editableFollowUp}</p>
-              )}
             </div>
           )}
 
+          {/* Buttons in same line */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '1.5rem' }}>
+            {misconception.student_ids && (
+              <GroupFeedback onOpenModal={handleOpenGroupFeedbackModal} />
+            )}
+            <button 
+              className="btn btn-primary" 
+              onClick={handleAddToScreen}
+            >
+              Add to Screen
+            </button>
+            <button className="btn btn-secondary" onClick={resetDraft}>
+              Reset
+            </button>
+          </div>
+
+          {/* Affected Students underneath buttons */}
           {misconception.student_ids && (
-            <>
             <div className="affected-students" style={{marginTop: '1rem'}}>
               <b>Affected Students: </b>
                 {misconception.student_ids.map((studentId, index) => (
@@ -237,24 +261,7 @@ const MisconceptionCard = ({
                   </span>
                 ))}
             </div>
-            <div style={{ marginTop: '1.5rem' }}>
-  <GroupFeedback misconception={misconception} snapshotMap={snapshotMap} />
-</div>
-
-            </>
           )}
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '1rem' }}>
-            <button 
-              className="btn btn-primary" 
-              onClick={handleAddToScreen}
-            >
-              Add to Screen
-            </button>
-            <button className="btn btn-secondary" onClick={resetDraft}>
-              Reset
-            </button>
-          </div>
         </div>
       )}
 
@@ -271,6 +278,14 @@ const MisconceptionCard = ({
           />
         )}
       </Modal>
+
+      {/* Group Feedback Modal */}
+      <GroupFeedbackModal
+        isOpen={isGroupFeedbackModalOpen}
+        onClose={handleCloseGroupFeedbackModal}
+        misconception={misconception}
+        snapshotMap={snapshotMap}
+      />
     </div>
   );
 };

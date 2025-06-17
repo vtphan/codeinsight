@@ -58,7 +58,7 @@ const PresentationMode = ({ items, onClose }) => {
           <>
             {currentItem.explanation && (
               <div className="presentation-explanation" style={{ marginBottom: '2rem' }}>
-                <h3>Explanation:</h3>
+                {/* <h3>Explanation:</h3> */}
                 <p style={{ fontSize: '1.5rem' }}>{currentItem.explanation}</p>
               </div>
             )}
@@ -92,9 +92,9 @@ const PresentationMode = ({ items, onClose }) => {
           <>
             <div className="presentation-description" style={{ marginBottom: '2rem' }}>
               <p style={{ fontSize: '1.5rem' }}>{currentItem.description}</p>
-              <p style={{ fontSize: '1.25rem', marginTop: '1rem' }}>
+              {/* <p style={{ fontSize: '1.25rem', marginTop: '1rem' }}>
                 Occurrence: {currentItem.percentage}
-              </p>
+              </p> */}
             </div>
             
             {currentItem.codeExample && (

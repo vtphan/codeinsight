@@ -5,6 +5,7 @@ import CodeBlock from './CodeBlock';
 import Modal from './Modal';
 import StudentSubmission from './StudentSubmission';
 import GroupFeedback from './GroupFeedback';
+import GroupFeedbackModal from './GroupFeedbackModal';
 import EditableCodeBlock from './EditableCodeBlock';
 
 const ErrorItem = ({ error, errorNumber, studentSubmissions, submissionTimes, addToScreenQueue }) => {
@@ -14,6 +15,7 @@ const ErrorItem = ({ error, errorNumber, studentSubmissions, submissionTimes, ad
   const [expanded, setExpanded] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isGroupFeedbackModalOpen, setIsGroupFeedbackModalOpen] = useState(false);
 
   // Editable state similar to MisconceptionCard
   const [editableDescription, setEditableDescription] = useState(saved.description || error.description || '');
@@ -41,13 +43,21 @@ const ErrorItem = ({ error, errorNumber, studentSubmissions, submissionTimes, ad
     setIsModalOpen(false);
   };
 
+  const handleOpenGroupFeedbackModal = () => {
+    setIsGroupFeedbackModalOpen(true);
+  };
+
+  const handleCloseGroupFeedbackModal = () => {
+    setIsGroupFeedbackModalOpen(false);
+  };
+
   const handleAddToScreen = () => {
     addToScreenQueue({
       type: 'error',
-      title: `${errorNumber}: ${error.category}`,
+      title: error.category,
       description: editableDescription,
       codeExample: editableExampleCode,
-      percentage: error.occurrence_percentage,
+      // percentage: error.occurrence_percentage,
     });
   };
 
@@ -90,26 +100,25 @@ const ErrorItem = ({ error, errorNumber, studentSubmissions, submissionTimes, ad
       {expanded && (
         <div className="expandable-content">
           <div className="description">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <h4>Description:</h4>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+              {isEditingDescription ? (
+                <textarea
+                  value={editableDescription}
+                  onChange={(e) => setEditableDescription(e.target.value)}
+                  className="editable-textarea"
+                  style={{ flex: 1, minHeight: '80px', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border-color)', fontFamily: 'inherit', fontSize: 'inherit' }}
+                />
+              ) : (
+                <p style={{ flex: 1, margin: 0 }}>{editableDescription}</p>
+              )}
               <button 
                 onClick={() => setIsEditingDescription(!isEditingDescription)} 
                 className="btn-icon"
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary-color)' }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary-color)', flexShrink: 0 }}
               >
                 {isEditingDescription ? <Check size={16} /> : <Edit2 size={16} />}
               </button>
             </div>
-            {isEditingDescription ? (
-              <textarea
-                value={editableDescription}
-                onChange={(e) => setEditableDescription(e.target.value)}
-                className="editable-textarea"
-                style={{ width: '100%', minHeight: '80px', padding: '0.5rem', borderRadius: '4px', border: '1px solid var(--border-color)', fontFamily: 'inherit', fontSize: 'inherit' }}
-              />
-            ) : (
-              <p>{editableDescription}</p>
-            )}
           </div>
           
           {error.example_code && (
@@ -135,33 +144,11 @@ const ErrorItem = ({ error, errorNumber, studentSubmissions, submissionTimes, ad
             </div>
           )}
           
-          {error.student_ids && (
-            <>
-              <div className="affected-students" style={{marginTop: '1rem'}}>
-                <b>Affected Students: </b>
-                  {error.student_ids.map((studentId, index) => (
-                    <span key={studentId}>
-                      <a 
-                        href="#" 
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleStudentClick(studentId);
-                        }}
-                        style={{ color: 'var(--primary-color)', textDecoration: 'underline', cursor: 'pointer' }}
-                      >
-                        {studentId}
-                      </a>
-                      {index < error.student_ids.length - 1 ? ', ' : ''}
-                    </span>
-                  ))}
-              </div>
-              <div style={{ marginTop: '1.5rem' }}>
-                <GroupFeedback misconception={error} snapshotMap={snapshotMap} />
-              </div>
-            </>
-          )}
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginTop: '1rem' }}>
+          {/* Buttons in same line */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '1.5rem' }}>
+            {error.student_ids && (
+              <GroupFeedback onOpenModal={handleOpenGroupFeedbackModal} />
+            )}
             <button 
               className="btn btn-primary" 
               onClick={handleAddToScreen}
@@ -172,6 +159,28 @@ const ErrorItem = ({ error, errorNumber, studentSubmissions, submissionTimes, ad
               Reset
             </button>
           </div>
+
+          {/* Affected Students underneath buttons */}
+          {error.student_ids && (
+            <div className="affected-students" style={{marginTop: '1rem'}}>
+              <b>Affected Students: </b>
+                {error.student_ids.map((studentId, index) => (
+                  <span key={studentId}>
+                    <a 
+                      href="#" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleStudentClick(studentId);
+                      }}
+                      style={{ color: 'var(--primary-color)', textDecoration: 'underline', cursor: 'pointer' }}
+                    >
+                      {studentId}
+                    </a>
+                    {index < error.student_ids.length - 1 ? ', ' : ''}
+                  </span>
+                ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -189,6 +198,14 @@ const ErrorItem = ({ error, errorNumber, studentSubmissions, submissionTimes, ad
           />
         )}
       </Modal>
+
+      {/* Group Feedback Modal */}
+      <GroupFeedbackModal
+        isOpen={isGroupFeedbackModalOpen}
+        onClose={handleCloseGroupFeedbackModal}
+        misconception={error}
+        snapshotMap={snapshotMap}
+      />
     </div>
   );
 };

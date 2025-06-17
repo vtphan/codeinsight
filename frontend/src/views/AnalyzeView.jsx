@@ -135,10 +135,6 @@ const AnalyzeView = ({ analysisData, problemDescription, codeSnapshots, submissi
         <div className="tabs-content">
           {activeTab === 'errors' && (
             <div className="errors-tab">
-              <p style={{ marginBottom: '1rem' }}>
-                The following errors were identified in student submissions, ordered by frequency:
-              </p>
-              
               {aggregate_analysis.top_errors.map((error, index) => (
                 <ErrorItem 
                   key={index} 
@@ -154,10 +150,6 @@ const AnalyzeView = ({ analysisData, problemDescription, codeSnapshots, submissi
           
           {activeTab === 'misconceptions' && (
             <div className="misconceptions-tab">
-              <p style={{ marginBottom: '1rem' }}>
-                The following potential misconceptions were identified across student submissions:
-              </p>
-              
               {aggregate_analysis.potential_misconceptions.map((misconception, index) => (
                 <MisconceptionCard 
                   key={index} 
