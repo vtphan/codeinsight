@@ -49,7 +49,7 @@ const GroupFeedbackModal = ({ isOpen, onClose, misconception, snapshotMap }) => 
       title="Group Feedback"
     >
       <div>
-        <h4>Feedback to students in this group:</h4>
+        <h4>Feedback to students: {misconception.student_ids.map(id => id).join(', ')}</h4>
         <textarea
           value={groupFeedback}
           onChange={(e) => setGroupFeedback(e.target.value)}

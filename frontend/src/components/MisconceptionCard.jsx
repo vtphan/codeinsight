@@ -152,11 +152,11 @@ const MisconceptionCard = ({
             </div>
           )}
 
-          <div className="code-examples" style={{marginTop: '1rem'}}>
+          <div className="code-examples" style={{marginTop: '1rem', display: 'flex', gap: '1rem', flexWrap: 'wrap'}}>
             {misconception.example_code_error && (
-              <div className="error-code">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
-                  <h4>Example of Error:</h4>
+              <div className="error-code" style={{flex: '1', minWidth: '300px'}}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <h4 style={{margin: 0}}>Example of Error:</h4>
                   <button 
                     onClick={() => setIsEditingErrorCode(!isEditingErrorCode)} 
                     className="btn-icon"
@@ -177,9 +177,9 @@ const MisconceptionCard = ({
             )}
 
             {misconception.correct_code_example && (
-              <div className="correct-code">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
-                  <h4>Correct Example:</h4>
+              <div className="correct-code" style={{flex: '1', minWidth: '300px'}}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <h4 style={{margin: 0}}>Correct Example:</h4>
                   <button 
                     onClick={() => setIsEditingCorrectCode(!isEditingCorrectCode)} 
                     className="btn-icon"
