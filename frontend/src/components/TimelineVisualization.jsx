@@ -34,7 +34,7 @@ const TimelineVisualization = ({
   problemDescription
 }) => {
   // Change the default and remove the state since we don't need it anymore
-  const sortBy = 'snapshot-time';
+  const sortBy = 'student-id';
   const [selectedSnapshot, setSelectedSnapshot] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -437,16 +437,22 @@ const TimelineVisualization = ({
             display: true,
             text: 'Students'
           },
+          min: 0,
+          max: (() => {
+            // Set max to the number of students + 1 for padding
+            const studentCount = Object.keys(chartData.studentYPositions).length;
+            return studentCount + 1;
+          })(),
           ticks: {
+            stepSize: 1,
             callback: function(value) {
               if (value === 0) {
                 return '';
               }
-              if (value === Math.floor(value)) {
-                for (const [studentId, yPos] of Object.entries(chartData.studentYPositions)) {
-                  if (yPos === value) {
-                    return `Student ${studentId}`;
-                  }
+              // Find the student ID for this Y position
+              for (const [studentId, yPos] of Object.entries(chartData.studentYPositions)) {
+                if (yPos === value) {
+                  return `Student ${studentId}`;
                 }
               }
               return '';

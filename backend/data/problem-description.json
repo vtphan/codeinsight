@@ -1,5 +1,3 @@
 {
-    "timestamp": "2025-05-05 13:00:00",
-    "problem_description": "Write a function `max_difference(lst)` that takes a list of integers and returns the largest difference between any two numbers in the list (i.e., the maximum value minus the minimum value). Assume the list has at least one element.\n\nExamples:\n- `max_difference([1, 5, 3, 9, 2])` returns `8` (because 9 - 1 = 8).\n- `max_difference([1])` returns `0` (because max = min, so 1 - 1 = 0).\n- `max_difference([0, -2, 4])` returns `6` (because 4 - (-2) = 6).\n- `max_difference([10, 10, 10])` returns `0` (because max = min, so 10 - 10 = 0).\n\nRequirements:\n1. Do not use built-in functions like `min()` or `max()` for finding the extremes.\n2. Return the difference between the maximum and minimum values."
-  }
-  
+  "title": ""
+}

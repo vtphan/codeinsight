@@ -42,29 +42,20 @@ func handleMergedData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := map[string]string{
-		"analysisData":      "data/data-gemini.json",
-		"problemDescription": "data/problem-description.json",
-		"codeSnapshots":     "data/codesnapshots.json",
-		"submissionTimes":   "data/submission-times.json",
-		"taInterventions":   "data/TA-Interventions.json",
+	// Read the data.json file
+	data, err := ioutil.ReadFile("data/data.json")
+	if err != nil {
+		http.Error(w, "Failed to read data/data.json", http.StatusInternalServerError)
+		return
 	}
 
-	merged := make(map[string]interface{})
-	for key, filename := range files {
-		data, err := ioutil.ReadFile(filename)
-		if err != nil {
-			http.Error(w, "Failed to read "+filename, http.StatusInternalServerError)
-			return
-		}
-		var parsed interface{}
-		if err := json.Unmarshal(data, &parsed); err != nil {
-			http.Error(w, "Invalid JSON in "+filename, http.StatusInternalServerError)
-			return
-		}
-		merged[key] = parsed
+	// Parse the JSON to ensure it's valid
+	var parsed interface{}
+	if err := json.Unmarshal(data, &parsed); err != nil {
+		http.Error(w, "Invalid JSON in data/data.json", http.StatusInternalServerError)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(merged)
+	json.NewEncoder(w).Encode(parsed)
 }

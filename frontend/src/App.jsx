@@ -32,7 +32,7 @@ function App() {
     // const problemId = urlParams.get("problem_id")
     const problemId = 23;
     const regenerate = true;
-    return fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    return fetch(`http://127.0.0.1:8080/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
     // return fetch(`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
 
       .then((res) => {
@@ -66,7 +66,7 @@ function App() {
     const problemId = 23; 
     const regenerate = false;
 
-    fetch(`http://127.0.0.1:8082/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
+    fetch(`http://127.0.0.1:8080/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
     // fetch(`${window.location.origin}/api/data?problem_id=${problemId}&regenerate=${regenerate}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch data");

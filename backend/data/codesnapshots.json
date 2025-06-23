@@ -1,204 +1,137 @@
 {
-  "entries": [
-    {
-      "student_id": 1,
-      "timestamp": "2025-05-05 13:07:15",
-      "content": "def max_difference(lst):\n    return lst[-1] - lst[0]"
-    },
-    {
-      "student_id": 2,
-      "timestamp": "2025-05-05 13:07:30",
-      "content": "def max_difference(lst):\n    return max(lst) - min(lst)"
-    },
-    {
-      "student_id": 3,
-      "timestamp": "2025-05-05 13:08:00",
-      "content": "def max_difference(lst):\n    diff = 0\n    for i in range(len(lst)-1):\n        if lst[i+1] - lst[i] > diff:\n            diff = lst[i+1] - lst[i]\n    return diff"
-    },
-    {
-      "student_id": 4,
-      "timestamp": "2025-05-05 13:08:20",
-      "content": "def max_difference(lst):\n    min_val = 0\n    max_val = 0\n    for num in lst:\n        if num > max_val:\n            max_val = num\n        if num < min_val:\n            min_val = num\n    return max_val - min_val"
-    },
-    {
-      "student_id": 5,
-      "timestamp": "2025-05-05 13:08:45",
-      "content": "def max_difference(lst):\n    total = 0\n    for i in range(len(lst)-1):\n        total += lst[i+1] - lst[i]\n    return total"
-    },
-    {
-      "student_id": 6,
-      "timestamp": "2025-05-05 13:09:10",
-      "content": "def max_difference(lst):\n    first = lst[0]\n    max_diff = 0\n    for num in lst:\n        if num > first:\n            max_diff = num - first\n    return max_diff"
-    },
-    {
-      "student_id": 7,
-      "timestamp": "2025-05-05 13:09:25",
-      "content": "def max_difference(lst):\n    min_val = lst[1]\n    max_val = lst[1]\n    for i in range(1, len(lst)):\n        if lst[i] > min_val:\n            min_val = lst[i]\n        if lst[i] < max_val:\n            max_val = lst[i]\n    return min_val - max_val"
-    },
-    {
-      "student_id": 8,
-      "timestamp": "2025-05-05 13:09:40",
-      "content": "def max_difference(lst):\n    return abs(lst[1] - lst[0])"
-    },
-    {
-      "student_id": 9,
-      "timestamp": "2025-05-05 13:10:00",
-      "content": "def max_difference(lst):\n    i = 0\n    while i < len(lst):\n        if lst[i] > lst[i+1]:\n            lst[i], lst[i+1] = lst[i+1], lst[i]\n        i += 1\n    return lst[-1] - lst[0]"
-    },
-    {
-      "student_id": 10,
-      "timestamp": "2025-05-05 13:10:15",
-      "content": "def max_difference(lst):\n    largest = lst[0]\n    for num in lst:\n        if num > largest:\n            largest = num\n    return largest"
-    },
-    {
-      "student_id": 11,
-      "timestamp": "2025-05-05 13:08:10",
-      "content": "def max_difference(lst):\n    return max(lst) - min(lst)"
-    },
-    {
-      "student_id": 12,
-      "timestamp": "2025-05-05 13:08:25",
-      "content": "def max_difference(lst):\n    sorted_lst = sorted(lst)\n    return sorted_lst[-1] - sorted_lst[0]"
-    },
-    {
-      "student_id": 13,
-      "timestamp": "2025-05-05 13:08:40",
-      "content": "def max_difference(lst):\n    min_val = 0\n    max_val = 0\n    for num in lst:\n        if num < min_val:\n            min_val = num\n        if num > max_val:\n            max_val = num\n    return max_val - min_val"
-    },
-    {
-      "student_id": 14,
-      "timestamp": "2025-05-05 13:09:00",
-      "content": "def max_difference(lst):\n    max_diff = lst[0] - lst[0]\n    for i in range(len(lst)):\n        for j in range(len(lst)):\n            if lst[j] - lst[i] > max_diff:\n                max_diff = lst[j] - lst[i]\n    return max_diff"
-    },
-    {
-      "student_id": 15,
-      "timestamp": "2025-05-05 13:09:15",
-      "content": "def max_difference(lst):\n    min_val = lst[0]\n    max_val = lst[0]\n    for i in range(1, len(lst)):\n        if lst[i] < min_val:\n            min_val = lst[i]\n        if lst[i] > max_val:\n            max_val = lst[i]\n    return max_val - min_val"
-    },
-    {
-      "student_id": 16,
-      "timestamp": "2025-05-05 13:09:30",
-      "content": "def max_difference(lst):\n    min_val = lst[0]\n    max_val = lst[0]\n    for num in lst:\n        if num < min_val:\n            min_val = num\n        if num > max_val:\n            max_val = num\n    return abs(max_val - min_val)"
-    },
-    {
-      "student_id": 17,
-      "timestamp": "2025-05-05 13:09:45",
-      "content": "def max_difference(lst):\n    min_val = lst[0]\n    max_val = lst[0]\n    for num in lst:\n        if num < min_val and num >= 0:\n            min_val = num\n        if num > max_val:\n            max_val = num\n    return max_val - min_val"
-    },
-    {
-      "student_id": 18,
-      "timestamp": "2025-05-05 13:10:00",
-      "content": "def max_difference(lst):\n    min_val = lst[0]\n    for num in lst:\n        if num < min_val:\n            min_val = num\n    max_val = lst[0]\n    for num in lst:\n        if num > max_val:\n            max_val = num\n    return max_val - min_val"
-    },
-    {
-      "student_id": 19,
-      "timestamp": "2025-05-05 13:10:30",
-      "content": "def max_difference(lst):\n    min_val = lst[0]\n    max_val = lst[0]\n    for i in range(1, len(lst)):\n        if lst[i] <= min_val:\n            min_val = lst[i]\n        if lst[i] >= max_val:\n            max_val = lst[i]\n    return max_val - min_val"
-    },
-    {
-      "student_id": 20,
-      "timestamp": "2025-05-05 13:11:15",
-      "content": "def max_difference(lst):\n    if len(lst) == 0:\n        return 0\n    min_val = lst[0]\n    max_val = lst[0]\n    for num in lst:\n        if num < min_val:\n            min_val = num\n        if num > max_val:\n            max_val = num\n    return max_val - min_val"
-    },
-    {
-      "student_id": 21,
-      "timestamp": "2025-05-05 13:08:05",
-      "content": "def max_difference(lst):\n    min_val = lst[0]\n    for num in lst:\n        if num < min_val:\n            min_val = num\n    max_val = lst[0]\n    for num in lst:\n        if num > max_val:\n            max_val = num\n    return max_val - min_val"
-    },
-    {
-      "student_id": 22,
-      "timestamp": "2025-05-05 13:08:20",
-      "content": "def max_difference(lst):\n    min_val = lst[0]\n    max_val = lst[0]\n    for num in lst:\n        if num < min_val:\n            min_val = num\n        if num > max_val:\n            max_val = num\n    return abs(max_val - min_val)"
-    },
-    {
-      "student_id": 23,
-      "timestamp": "2025-05-05 13:08:45",
-      "content": "def max_difference(lst):\n    min_val = lst[0]\n    max_val = lst[0]\n    for i in range(1, len(lst)):\n        if lst[i] < min_val:\n            min_val = lst[i]\n        if lst[i] > max_val:\n            max_val = lst[i]\n    return max_val - min_val"
-    },
-    {
-      "student_id": 24,
-      "timestamp": "2025-05-05 13:09:10",
-      "content": "def max_difference(lst):\n    if len(lst) == 0:\n        return 0\n    min_val = lst[0]\n    max_val = lst[0]\n    for num in lst:\n        if num < min_val:\n            min_val = num\n        if num > max_val:\n            max_val = num\n    return max_val - min_val"
-    },
-    {
-      "student_id": 25,
-      "timestamp": "2025-05-05 13:09:35",
-      "content": "def max_difference(lst):\n    min_val = lst[0]\n    max_val = lst[0]\n    for num in lst:\n        if num <= min_val:\n            min_val = num\n        if num >= max_val:\n            max_val = num\n    return max_val - min_val"
-    },
-    {
-      "student_id": 26,
-      "timestamp": "2025-05-05 13:10:00",
-      "content": "def max_difference(lst):\n    min_val = lst[0]\n    max_val = lst[0]\n    for i in range(len(lst)):\n        if lst[i] < min_val:\n            min_val = lst[i]\n        if lst[i] > max_val:\n            max_val = lst[i]\n    return max_val - min_val"
-    },
-    {
-      "student_id": 27,
-      "timestamp": "2025-05-05 13:10:25",
-      "content": "def max_difference(lst):\n    min_val = lst[0]\n    max_val = lst[0]\n    if len(lst) == 1:\n        return 0\n    for num in lst:\n        if num < min_val:\n            min_val = num\n        if num > max_val:\n            max_val = num\n    return max_val - min_val"
-    },
-    {
-      "student_id": 28,
-      "timestamp": "2025-05-05 13:11:00",
-      "content": "def max_difference(lst):\n    min_val = lst[0]\n    max_val = lst[0]\n    for num in lst:\n        if num < min_val:\n            min_val = num\n        else:\n            if num > max_val:\n                max_val = num\n    return max_val - min_val"
-    },
-    {
-      "student_id": 29,
-      "timestamp": "2025-05-05 13:12:30",
-      "content": "def max_difference(lst):\n    min_val = lst[0]\n    max_val = lst[0]\n    for num in lst:\n        if num < min_val:\n            min_val = num\n        elif num > max_val:\n            max_val = num\n    return max_val - min_val"
-    },
-    {
-      "student_id": 30,
-      "timestamp": "2025-05-05 13:09:42",
-      "content": "def max_difference(lst):\n    min_val = lst[0]\n    max_val = lst[0]\n    for i in range(1, len(lst)):\n        if lst[i] < min_val:\n            min_val = lst[i]\n        if lst[i] > max_val:\n            max_val = lst[i]\n    return max_val - min_val"
-    },
-    {
-      "student_id": 31,
-      "timestamp": "2025-05-05 13:04:10",
-      "content": "def max_difference(lst):\n    smallest = lst[0]\n    largest = lst[0]\n    for num in lst:\n        if num < smallest:\n            smallest = num\n        if num > largest:\n            largest = num\n    return largest - smallest"
-    },
-    {
-      "student_id": 32,
-      "timestamp": "2025-05-05 13:05:25",
-      "content": "def max_difference(lst):\n    min_val = lst[0]\n    max_val = lst[0]\n    for i in range(len(lst)):\n        if lst[i] < min_val:\n            min_val = lst[i]\n        if lst[i] > max_val:\n            max_val = lst[i]\n    return max_val - min_val"
-    },
-    {
-      "student_id": 33,
-      "timestamp": "2025-05-05 13:06:40",
-      "content": "def max_difference(lst):\n    lowest = lst[0]\n    highest = lst[0]\n    for value in lst:\n        if value < lowest:\n            lowest = value\n        elif value > highest:\n            highest = value\n    return highest - lowest"
-    },
-    {
-      "student_id": 34,
-      "timestamp": "2025-05-05 13:07:15",
-      "content": "def max_difference(lst):\n    minimum = lst[0]\n    maximum = lst[0]\n    for num in lst:\n        if num <= minimum:\n            minimum = num\n        if num >= maximum:\n            maximum = num\n    return maximum - minimum"
-    },
-    {
-      "student_id": 35,
-      "timestamp": "2025-05-05 13:08:30",
-      "content": "def max_difference(lst):\n    min_number = lst[0]\n    max_number = lst[0]\n    for i in range(len(lst)):\n        if lst[i] < min_number:\n            min_number = lst[i]\n        elif lst[i] > max_number:\n            max_number = lst[i]\n    return max_number - min_number"
-    },
-    {
-      "student_id": 36,
-      "timestamp": "2025-05-05 13:09:50",
-      "content": "def max_difference(lst):\n    low = lst[0]\n    high = lst[0]\n    for number in lst:\n        if number < low:\n            low = number\n        if number > high:\n            high = number\n    return high - low"
-    },
-    {
-      "student_id": 37,
-      "timestamp": "2025-05-05 13:10:20",
-      "content": "def max_difference(lst):\n    min_value = lst[0]\n    max_value = lst[0]\n    for x in lst:\n        if x < min_value:\n            min_value = x\n        if x > max_value:\n            max_value = x\n    return max_value - min_value"
-    },
-    {
-      "student_id": 38,
-      "timestamp": "2025-05-05 13:11:45",
-      "content": "def max_difference(lst):\n    smallest_num = lst[0]\n    largest_num = lst[0]\n    for i in range(len(lst)):\n        if lst[i] <= smallest_num:\n            smallest_num = lst[i]\n        if lst[i] >= largest_num:\n            largest_num = lst[i]\n    return largest_num - smallest_num"
-    },
-    {
-      "student_id": 39,
-      "timestamp": "2025-05-05 13:13:00",
-      "content": "def max_difference(lst):\n    min_num = lst[0]\n    max_num = lst[0]\n    for item in lst:\n        if item < min_num:\n            min_num = item\n        elif item > max_num:\n            max_num = item\n    return max_num - min_num"
-    },
-    {
-      "student_id": 40,
-      "timestamp": "2025-05-05 13:14:30",
-      "content": "def max_difference(lst):\n    low_value = lst[0]\n    high_value = lst[0]\n    for n in lst:\n        if n < low_value:\n            low_value = n\n        if n > high_value:\n            high_value = n\n    return high_value - low_value"
-    }
-  ]
-}
+      "entries": [
+          {
+              "student_id": 54,
+              "timestamp": "2025-06-10 15:32:00",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):",
+              "grade": "",
+              "snapshot_id": 172
+          },
+          {
+              "student_id": 54,
+              "timestamp": "2025-06-10 15:32:15",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):\n\tif len(s) <= 1:\n\t\treturn s",
+              "grade": "",
+              "snapshot_id": 175
+          },
+          {
+              "student_id": 54,
+              "timestamp": "2025-06-10 15:32:31",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):\n\tif len(s) <= 1:\n\t\treturn s\n\telse:\n\t\treturn reverse(s[1:]",
+              "grade": "",
+              "snapshot_id": 177
+          },
+          {
+              "student_id": 54,
+              "timestamp": "2025-06-10 15:32:46",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):\n\tif len(s) <= 1:\n\t\treturn s\n\telse:\n\t\treturn reverse(s[1:] ) + s[0]\n\nfor s in ['hello', 'world',]",
+              "grade": "",
+              "snapshot_id": 179
+          },
+          {
+              "student_id": 54,
+              "timestamp": "2025-06-10 15:33:01",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):\n\tif len(s) <= 1:\n\t\treturn s\n\telse:\n\t\treturn reverse(s[1:] ) + s[0]\n\nfor s in ['hello', 'world', 'apple tree', 'racecar']:\n\tprint(s, rever)",
+              "grade": "",
+              "snapshot_id": 182
+          },
+          {
+              "student_id": 54,
+              "timestamp": "2025-06-10 15:33:16",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):\n\tif len(s) <= 1:\n\t\treturn s\n\telse:\n\t\treturn reverse(s[1:] ) + s[0]\n\nfor s in ['hello', 'world', 'apple tree', 'racecar']:\n\tprint(s, reverse(s))",
+              "grade": "",
+              "snapshot_id": 184
+          },
+          {
+              "student_id": 54,
+              "timestamp": "2025-06-10 15:34:56",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):\n\tif len(s) <= 1:\n\t\treturn s\n\telse:\n\t\treturn reverse(s[1:] ) + s[0]\n\nfor s in ['hello', 'world', 'apple tree', 'racecar']:\n\tprint(s, reverse(s))",
+              "grade": "",
+              "snapshot_id": 188
+          },
+          {
+              "student_id": 55,
+              "timestamp": "2025-06-10 15:32:01",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):",
+              "grade": "",
+              "snapshot_id": 173
+          },
+          {
+              "student_id": 55,
+              "timestamp": "2025-06-10 15:32:16",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):\n    reversed_string = s[::-1]\n    return reversed_string",
+              "grade": "",
+              "snapshot_id": 176
+          },
+          {
+              "student_id": 55,
+              "timestamp": "2025-06-10 15:32:47",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):\n    reversed_string = s[::-1]\n    return reversed_string\n    \ninput_string = \"hello\"\nreversed_string = reverse(input_string)\nprint(reversed_string)",
+              "grade": "",
+              "snapshot_id": 180
+          },
+          {
+              "student_id": 55,
+              "timestamp": "2025-06-10 15:34:17",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):\n    reversed_string = s[::-1]\n    return reversed_string\n\ninput_string = \"hello\"\nreversed_string = reverse(input_string)\nprint(reversed_string)",
+              "grade": "",
+              "snapshot_id": 185
+          },
+          {
+              "student_id": 56,
+              "timestamp": "2025-06-10 15:31:54",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):",
+              "grade": "",
+              "snapshot_id": 171
+          },
+          {
+              "student_id": 56,
+              "timestamp": "2025-06-10 15:32:09",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):\n\treversed_string = ''",
+              "grade": "",
+              "snapshot_id": 174
+          },
+          {
+              "student_id": 56,
+              "timestamp": "2025-06-10 15:32:39",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):\n\treversed_string = ''\n\tfor i in range",
+              "grade": "",
+              "snapshot_id": 178
+          },
+          {
+              "student_id": 56,
+              "timestamp": "2025-06-10 15:32:54",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):\n\treversed_string = ''\n\tfor i in range(len(s)-1, -1, -1):\n\t\treversed_string +=",
+              "grade": "",
+              "snapshot_id": 181
+          },
+          {
+              "student_id": 56,
+              "timestamp": "2025-06-10 15:33:09",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):\n\treversed_string = ''\n\tfor i in range(len(s)-1, -1, -1):\n\t\treversed_string += s[i]\n\tprint reversed_string\n\treturn reversed_string",
+              "grade": "",
+              "snapshot_id": 183
+          },
+          {
+              "student_id": 56,
+              "timestamp": "2025-06-10 15:34:25",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):\n\treversed_string = ''\n\tfor i in range(len(s)-1, -1, -1):\n\t\treversed_string += s[i]\n\tprint reversed_string\n\treturn reversed_string)",
+              "grade": "",
+              "snapshot_id": 186
+          },
+          {
+              "student_id": 56,
+              "timestamp": "2025-06-10 15:34:40",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):\n\treversed_string = ''\n\tfor i in range(len(s)-1, -1, -1):\n\t\treversed_string += s[i]\n\tprint(reversed_string)\n\treturn reversed_string",
+              "grade": "",
+              "snapshot_id": 187
+          },
+          {
+              "student_id": 56,
+              "timestamp": "2025-06-10 15:35:48",
+              "content": "# 5 Points, 1 for effort. Maximum attempts: 2\n#\n# This header (above) means:\n# (a) A correct grade is worth 5 points.\n# (b) An incorrect grade is worth 1 point.\n# (c) Students have 2 chances to submit their solutions.\n#  Given a string variable input_string, reverse the string.\n#  Store the reversed string in a variable called reversed_string.\n# Example Input: input_string = \"hello\"\n# Expected Output: reversed_string = \"olleh\"\n\ndef reverse(s):\n\treversed_string = ''\n\tfor i in range(len(s)-1, -1, -1):\n\t\treversed_string += s[i]\n\tprint(reversed_string)\n\treturn reversed_string",
+              "grade": "",
+              "snapshot_id": 189
+          }
+      ]
+  }
