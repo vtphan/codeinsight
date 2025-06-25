@@ -212,13 +212,17 @@ func performAIAnalysisAndSave() (interface{}, error) {
 
 	// Create the analysis data structure to save
 	analysisDataToSave := map[string]interface{}{
-		"problem_summary": map[string]interface{}{
-			"title": "AI Generated Analysis",
-		},
 		"isEnable":              true,
 		"overall_assessment":    calculateOverallAssessment(latestSnapshots, gradeMap),
 		"individual_assessment": createIndividualAssessment(latestSnapshots, gradeMap),
 		"aggregate_analysis":    aiResult,
+	}
+
+	// Preserve existing problem_summary if it exists
+	if analysisData, ok := dataStructure["analysisData"].(map[string]interface{}); ok {
+		if problemSummary, exists := analysisData["problem_summary"]; exists {
+			analysisDataToSave["problem_summary"] = problemSummary
+		}
 	}
 
 	// Update the analysisData field in the existing data structure
@@ -585,67 +589,27 @@ func jsonEscape(s string) string {
 
 // CleanAndUnmarshal cleans JSON response and unmarshals it
 func CleanAndUnmarshal(jsonText string, target interface{}) (string, error) {
-	// Log the original response for debugging
-	log.Printf("Original response length: %d", len(jsonText))
-
-	// Remove markdown code blocks if present - use (?s) for dotall mode to match newlines
-	re := regexp.MustCompile("(?s)```(?:json)?\n?(.*?)\n?```")
-	matches := re.FindStringSubmatch(jsonText)
-	if len(matches) > 1 {
-		jsonText = strings.TrimSpace(matches[1])
-		log.Printf("Extracted JSON from markdown, new length: %d", len(jsonText))
-	}
-
-	// Clean up any extra whitespace and ensure it's valid JSON
+	// Trim leading/trailing whitespace
 	jsonText = strings.TrimSpace(jsonText)
 
-	// Remove any potential BOM or invisible characters at the beginning
-	jsonText = strings.TrimPrefix(jsonText, "\ufeff")
-
-	// Fix common JSON issues that AI might generate
-	jsonText = fixCommonJSONIssues(jsonText)
-
-	// Try to unmarshal to validate JSON
-	if err := json.Unmarshal([]byte(jsonText), target); err != nil {
-		log.Printf("JSON that failed to unmarshal (first 1000 chars): %s", jsonText[:min(1000, len(jsonText))])
-
-		// Try to find where the error occurs
-		var jsonMap map[string]interface{}
-		if jsonErr := json.Unmarshal([]byte(jsonText), &jsonMap); jsonErr != nil {
-			log.Printf("JSON syntax error details: %v", jsonErr)
+	// Remove ```json and ``` or just ``` if present
+	if strings.HasPrefix(jsonText, "```") {
+		re := regexp.MustCompile("(?s)```(?:json)?\\s*(.*?)\\s*```")
+		matches := re.FindStringSubmatch(jsonText)
+		if len(matches) >= 2 {
+			jsonText = matches[1]
+		} else {
+			return "", errors.New("failed to extract valid JSON from code block")
 		}
+	}
 
-		return "", fmt.Errorf("JSON unmarshal error: %v", err)
+	// Now unmarshal cleaned JSON
+	if err := json.Unmarshal([]byte(jsonText), target); err != nil {
+		log.Printf("Unmarshal error: %v", err)
+		return "", err
 	}
 
 	return jsonText, nil
-}
-
-// fixCommonJSONIssues attempts to fix common JSON formatting issues
-func fixCommonJSONIssues(jsonText string) string {
-	// Remove trailing commas before closing brackets/braces
-	re1 := regexp.MustCompile(`,\s*}`)
-	jsonText = re1.ReplaceAllString(jsonText, "}")
-
-	re2 := regexp.MustCompile(`,\s*]`)
-	jsonText = re2.ReplaceAllString(jsonText, "]")
-
-	// Remove any comments (which aren't valid in JSON)
-	re3 := regexp.MustCompile(`//.*?\n`)
-	jsonText = re3.ReplaceAllString(jsonText, "\n")
-
-	re4 := regexp.MustCompile(`/\*.*?\*/`)
-	jsonText = re4.ReplaceAllString(jsonText, "")
-
-	return jsonText
-}
-
-// Helper function for min
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
 }
 
 // Add the struct definitions that were referenced in the original function
