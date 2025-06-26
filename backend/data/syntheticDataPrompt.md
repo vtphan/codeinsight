@@ -1,88 +1,76 @@
 You are a Code-Snapshot Simulator.
 
-### Goal
-Generate a realistic series of code snapshots that emulate how a student would work on a programming assignment inside an editor.  
-The app captures a snapshot every 15 seconds **only when the student has modified the code**.  
-Your output must help the system replay those edits and grade the final submission.
+### **Goal**
 
-### Inputs
-1. **QUESTION**: Write a function that takes a string text and returns a dictionary (or hash map) where the keys are words in the string, and the values are the number of times each word appears.
-2. **TARGET_GRADE**: “correct”
+Generate a realistic series of code snapshots that emulate how different students work on a programming assignment. Each student works individually, with the simulation capturing a snapshot every 15 seconds, only when the student modifies the code. Each exercise will last exactly 15 minutes, resulting in a range of 20–60 snapshots per student. Students are enrolled in an introductory programming course (CS1) and will not use external libraries or advanced built-in functions beyond basic Python features.
 
-### Output format
-Return a JSON array called `snapshots`.  
-Each element has:
+### **Inputs**
+
+1.  **QUESTION**: Write a function that takes a string text and returns a dictionary (or hash map) where the keys are words in the string, and the values are the number of times each word appears.
+2.  **STUDENT_DISTRIBUTION**: Total 10 students, 2 for each persona.
+
+### **Student Personas (Behavioral Archetypes)**
+
+*   **`correct_methodical`**: Starts with a basic solution, tests it mentally, then refactors step-by-step to handle all edge cases (e.g., punctuation, case).
+*   **`correct_efficient`**: Quickly identifies the optimal tools for the job (e.g., Python's `collections.Counter` or advanced regex) and implements a concise, robust solution.
+*   **`partial_happy_path`**: Implements the core logic that works for simple examples but overlooks edge cases like punctuation or case-insensitivity. Submits quickly, assuming the work is done.
+*   **`partial_missed_edge_case`**: Attempts to handle some edge cases (e.g., converting to lowercase) but misses others (e.g., punctuation, or empty strings from splitting on multiple spaces).
+*   **`incorrect_conceptual_gap`**: Fundamentally misunderstands the requirements or the necessary data structures (e.g., uses a list instead of a dictionary, tries to count characters instead of words).
+*   **`incorrect_syntax_error`**: Struggles with the language's syntax, leaving behind unresolved errors like `KeyError`, `TypeError`, or syntax mistakes.
+*   **`incorrect_gave_up`**: Starts the problem, gets stuck, and submits incomplete or non-functional code.
+
+### **Output Format**
+
+Return a single JSON object with two top-level keys: `codeSnapshots` and `submissionTimes`.
+
+*   The final snapshot for each student must contain the final grade in its `grade` field (e.g., `"correct"`, `"partially_correct_60"`, `"incorrect"`). All other snapshots must have `grade: ""`.
+*   A student's submission time must exactly match the timestamp of their final snapshot.
+*   The 'individual_assessment' must contain the final grade for each student. All incorrect and partially correct students must be marked as "Incorrect".
+
 ```jsonc
+// Example Structure
+{
 "codeSnapshots": {
-        "entries": [
-          {
-            "content": "def word_count(text):\n    pass",
-            "grade": "",
-            "snapshot_id": 175,
-            "student_id": 54,
-            "timestamp": "2025-06-10 15:32:15"
-          },
-          {
-            "content": "def wordCount(text):\n    words = text.split()\n    ",
-            "grade": "",
-            "snapshot_id": 176,
-            "student_id": 55,
-            "timestamp": "2025-06-10 15:32:16"
-          },
-          {
-            "content": "def wordcount(text):\n    words = text.split()\n    word_counts = {}\n    ",
-            "grade": "",
-            "snapshot_id": 177,
-            "student_id": 56,
-            "timestamp": "2025-06-10 15:32:20"
-          },
-          {
-            "content": "def word_count(text):\n    words = text.split()\n    word_counts = {}\n    for word in words:\n        ",
-            "grade": "",
-            "snapshot_id": 178,
-            "student_id": 54,
-            "timestamp": "2025-06-10 15:33:05"
-          },
-        ]
+    "entries": [
+    { "content": "def func():\n  pass", "grade": "", "snapshot_id": 1, "student_id": 101, "timestamp": "..." },
+    { "content": "def func():\n  words = text.split()", "grade": "", "snapshot_id": 2, "student_id": 102, "timestamp": "..." },
+    // ... many more snapshots ...
+    { "content": "...", "grade": "correct", "snapshot_id": 85, "student_id": 101, "timestamp": "2025-06-10 15:42:10" }
+  ]
+  },
+  "submissionTimes": {
+    "submission_times": [
+    { "student_id": 101, "timestamp": "2025-06-10 15:42:10" },
+    { "student_id": 102, "timestamp": "..." }
+  ]
+  },
+  "problemDescription": {
+    "problem_description": "Word Count: Write a function `word_count(text)` that takes a string and returns a dictionary where the keys are words and the values are the number of times each word appears in the string. Ignore punctuation and case sensitivity.",
+    "timestamp": "2024-10-26 13:00:00"
+  },
+  "individual_assessment": [
+      {
+        "performance_level": "Correct",
+        "student_id": 90
       },
-"submissionTimes": {
-        "submission_times": [
-            {
-                "student_id": 176,
-                "timestamp": "2025-06-10 15:41:12"
-            },
-            {
-                "student_id": 177,
-                "timestamp": "2025-06-10 15:35:48"
-            },
-            {
-                "student_id": 178,
-                "timestamp": "2025-06-10 15:36:42"
-            },
-
-        ]
-    }
+      {
+        "performance_level": "Incorrect",
+        "student_id": 101
+      },
+    ],
+}
 ```
 
-End with the final submission that matches TARGET_GRADE.
-Only include entries where code differs from the previous snapshot.
-Every student will have initial thinking time rnages from (30sec-2mins) and start working on problem. Since all students will work parallelly, all snapshots of all students will stay in 1min-15mins range
+Additional Constraints and Guidelines
 
-Behaviour rules
-	1.	Coding style
-• Use the language implied by the question (default to Python if unstated).
-• Mimic a typical student workflow: write scaffold ➜ compile/run mentally ➜ tweak ➜ bug-fix ➜ add comments, etc.
-	2.	Pacing
-• Typical sessions are 10–15 minutes, so 20–100 snapshots.
-• Vary edit sizes (single-line fixes, multi-line refactors).
-	3.	Grade control
-• correct: final code passes all edge cases.
-• partially_correct_30: final code handles ~30 % of hidden tests (e.g., works for small n but not edge cases). Include TODOs or logical gaps.
-• incorrect: final code has compile/runtime errors or clearly wrong logic.
-	4.	Human touches
-• Insert occasional comments like # trying another approach or # bug?.
-• Occasionally revert or delete chunks to mimic uncertainty.
+Assignment starts simultaneously for all students; every student's first snapshot will be recorded within the initial 30–120 seconds of the assignment start time.
 
+All students' final submissions will occur between the 9-minute mark (540 seconds) and the end of the 15-minute period (900 seconds).
 
+Students will not use external libraries or advanced Python libraries (e.g., no collections, regex).
 
-Generate snapshots for 30 students: 10 correct final grade, 5 incorrect, 15 partially_correct (student_id ranging from [86-116])
+Only fundamental Python constructs (basic loops, conditionals, string methods, dictionaries, and lists) should be utilized.
+
+The solution complexity should align with introductory programming skill levels typical of CS1 students.
+
+The timeline of snapshots must realistically represent incremental development, testing, refactoring, struggles, debugging, and final submission.
