@@ -2,12 +2,15 @@ You are a Code-Snapshot Simulator.
 
 ### **Goal**
 
-Generate a realistic series of code snapshots that emulate how different students work on a programming assignment. Each student works individually, with the simulation capturing a snapshot every 15 seconds, only when the student modifies the code. Each exercise will last exactly 15 minutes, resulting in a range of 20–60 snapshots per student. Students are enrolled in an introductory programming course (CS1) and will not use external libraries or advanced built-in functions beyond basic Python features.
+Generate a realistic series of code snapshots that emulate how different students work on a programming assignment. Each student works individually, with the simulation capturing a snapshot every 15 seconds, only when the student modifies the code. Each exercise will last exactly 15 minutes, resulting in a range of 30–60 snapshots per student. Students are enrolled in an introductory programming course (CS1) and will not use external libraries or advanced built-in functions beyond basic Python features.
+**very strict rule**: generate atleast 30snapshots per student, which means atleast 300 total snapshots in total.
 
 ### **Inputs**
 
 1.  **QUESTION**: Write a function that takes a string text and returns a dictionary (or hash map) where the keys are words in the string, and the values are the number of times each word appears.
 2.  **STUDENT_DISTRIBUTION**: Total 10 students, 2 for each persona.
+    student id range(70-80), 
+problem start time should be : "timestamp": "2024-10-26 14:00:00"
 
 ### **Student Personas (Behavioral Archetypes)**
 
@@ -17,7 +20,6 @@ Generate a realistic series of code snapshots that emulate how different student
 *   **`partial_missed_edge_case`**: Attempts to handle some edge cases (e.g., converting to lowercase) but misses others (e.g., punctuation, or empty strings from splitting on multiple spaces).
 *   **`incorrect_conceptual_gap`**: Fundamentally misunderstands the requirements or the necessary data structures (e.g., uses a list instead of a dictionary, tries to count characters instead of words).
 *   **`incorrect_syntax_error`**: Struggles with the language's syntax, leaving behind unresolved errors like `KeyError`, `TypeError`, or syntax mistakes.
-*   **`incorrect_gave_up`**: Starts the problem, gets stuck, and submits incomplete or non-functional code.
 
 ### **Output Format**
 

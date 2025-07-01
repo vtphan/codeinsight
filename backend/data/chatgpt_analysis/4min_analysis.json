@@ -1,0 +1,121 @@
+{
+    “aggregate_analysis”: {
+    “top_errors”: [
+    {
+    “category”: “Requirement Overlooking”,
+    “occurrence_count”: 10,
+    “occurrence_percentage”: “35.71%”,
+    “description”: “Students frequently exhibit ‘requirement overlooking’, indicating a need for instructor intervention.”,
+    “example_code”: [
+    “def word_count(text):\n    words = text.split()\n    word_counts = {}\n    for word in words:\n        if word in word_counts:\n            word_counts[word] += 1\n        else:\n            word_counts[word] = 1\n    return word_counts”,
+    “def word_count(text):\n    # This works for simple text. But not for ‘Word’ and ‘word’\n    words = text.split()\n    counts = {}\n    for word in words:\n        if word in counts:\n            counts[word] += 1\n        else:\n            counts[word] = 1\n    return counts”,
+    “def word_count(text):\n    # test with ‘hello world hello’\n    # words = [‘hello’, ‘world’, ‘hello’]\n    # counts = {‘hello’: 2, ‘world’: 1}\n    # looks correct\n    words = text.split()\n    counts = {}\n    for word in words:\n        if word in counts:\n            counts[word] += 1\n        else:\n            counts[word] = 1\n    return counts”
+    ],
+    “student_ids”: [70, 71, 74]
+    },
+    {
+    “category”: “Missing Key Concepts”,
+    “occurrence_count”: 7,
+    “occurrence_percentage”: “25.00%”,
+    “description”: “Students frequently exhibit ‘missing key concepts’, indicating a need for instructor intervention.”,
+    “example_code”: [
+    “def word_count(text):\n    clean_text = text.lower()\n    punctuation = ‘.,!?’\n    for p in punctuation:\n        clean_text = clean_text.replace(p, ’ ‘)\n    \n    words = clean_text.split()\n    counts = {}\n    for word in words:\n        counts[word] = counts.get(word, 0) + 1\n        \n    return counts”,
+    “def word_count(text):\n    words = text.split()\n    counts = {}\n    for word in words: # added colon\n        counts[word] = counts[word] + 1”,
+    “def word_count(text):\n    """Docstring for my function."""\n    text = text.lower()\n    text = text.replace(’.’, ‘’)\n    text = text.replace(’,’, ‘’)\n    text = text.replace(’!’, ‘’)\n    text = text.replace(’?’, ‘’)\n    words = text.split()\n    word_counts = {}\n    for w in words:\n        if w:\n            word_counts[w] = word_counts.get(w, 0) + 1\n    return word_counts”
+    ],
+    “student_ids”: [73, 79, 81]
+    },
+    {
+    “category”: “Problem Misunderstanding”,
+    “occurrence_count”: 3,
+    “occurrence_percentage”: “10.71%”,
+    “description”: “Students frequently exhibit ‘problem misunderstanding’, indicating a need for instructor intervention.”,
+    “example_code”: [
+    “def word_count(text):\n  cleaned_str = ""\n  for char in text.lower():\n    if char.isalpha() or char.isspace():\n      cleaned_str += char\n    else:\n      cleaned_str += ’ ’\n  \n  words = cleaned_str.split()\n  counts = {}\n  for word in words:”,
+    “# wait, the question says count WORDS, not characters. oops.\n\ndef count_chars(text):\n    char_counts = {}\n    for char in text:\n        if char in char_counts:\n            char_counts[char] += 1\n        else:\n            char_counts[char] = 1\n    return char_counts”,
+    “def count_chars(text):\n    counts = {}\n    for char in text:\n        if char != ’ ‘:\n            if char in counts:\n                counts[char] += 1\n            else:\n                counts[char] = 1\n    return counts”
+    ],
+    “student_ids”: [72, 78, 108]
+    },
+    {
+    “category”: “Poor Code Organization”,
+    “occurrence_count”: 3,
+    “occurrence_percentage”: “10.71%”,
+    “description”: “Students frequently exhibit ‘poor code organization’, indicating a need for instructor intervention.”,
+    “example_code”: [
+    “def word_count(text):\n  lower_text = text.lower()\n  words = lower_text.split()\n  counts = {}\n  for word in words:\n    if word not in counts:\n      counts[word] = 1\n    else:\n      counts[word] += 1\n  return counts”,
+    “def word_count(text):\n    # this doesn’t work for multiple spaces\n    counts = {}\n    for word in text.split():\n        if word not in counts:\n            counts[word] = 1\n    return counts”,
+    “def word_count(text):\n    words = text.split()\n    counts = {}\n    for word in words:\n        counts[word] += 1\n    return counts”
+    ],
+    “student_ids”: [77, 89, 109]
+    },
+    {
+    “category”: “Stuck Pattern”,
+    “occurrence_count”: 2,
+    “occurrence_percentage”: “7.14%”,
+    “description”: “Students frequently exhibit ‘stuck pattern’, indicating a need for instructor intervention.”,
+    “example_code”: [
+    “# this is simple enough”,
+    “def word_count(text):\n    pass”
+    ],
+    “student_ids”: [104, 110]
+    }
+    ],
+    “error_correlations”: [
+    {
+    “correlated_errors”: [“Incomplete Planning”, “Stuck Pattern”],
+    “correlation_count”: 1,
+    “correlation_percentage”: “3.57%”,
+    “hypothesis”: “Students exhibiting ‘Incomplete Planning’ often also struggle with ‘Stuck Pattern’, possibly due to related gaps in understanding.”,
+    “example_code”: [“def word_count(text):\n    pass”],
+    “student_ids”: [110]
+    },
+    {
+    “correlated_errors”: [“Requirement Overlooking”, “Stuck Pattern”],
+    “correlation_count”: 1,
+    “correlation_percentage”: “3.57%”,
+    “hypothesis”: “Students exhibiting ‘Requirement Overlooking’ often also struggle with ‘Stuck Pattern’, possibly due to related gaps in understanding.”,
+    “example_code”: [”# this is simple enough”],
+    “student_ids”: [104]
+    }
+    ],
+    “potential_misconceptions”: [
+    {
+    “misconception”: “Confusion between word counting and character counting.”,
+    “related_error_categories”: [“Problem Misunderstanding”],
+    “occurrence_count”: 3,
+    “occurrence_percentage”: “10.71%”,
+    “explanation_diagnostic”: “Several students implemented character counting instead of word counting, indicating a misunderstanding of the problem requirements.”,
+    “example_code_error”: [“def count_chars(text):\n    counts = {}\n    for char in text:\n        if char != ’ ‘:\n            if char in counts:\n                counts[char] += 1\n            else:\n                counts[char] = 1\n    return counts”],
+    “student_ids”: [72, 78, 108],
+    “suggested_explanation_for_students”: “Remember, the task is to count words, not individual letters. Words are separated by spaces.”,
+    “correct_approach_hint”: [“words = text.split()”, “counts = {}”, “for word in words:”, “    counts[word] = counts.get(word, 0) + 1”],
+    “follow_up_question”: “How can you split a sentence into words in Python?”
+    },
+    {
+    “misconception”: “Ignoring case sensitivity and punctuation handling.”,
+    “related_error_categories”: [“Requirement Overlooking”],
+    “occurrence_count”: 10,
+    “occurrence_percentage”: “35.71%”,
+    “explanation_diagnostic”: “Many students skipped handling capitalization or punctuation, leading to incorrect word counts for variants like ‘Hello’ vs ‘hello’.”,
+    “example_code_error”: [“def word_count(text):\n    words = text.split()\n    counts = {}\n    for word in words:\n        counts[word] = counts.get(word, 0) + 1\n    return counts”],
+    “student_ids”: [70, 71, 74],
+    “suggested_explanation_for_students”: “Make sure ‘Hello’ and ‘hello’ are treated as the same word, and that words aren’t split incorrectly because of commas or periods.”,
+    “correct_approach_hint”: [“text = text.lower()”, “for p in ‘.,!?’:”, “    text = text.replace(p, ‘’)”, “words = text.split()”],
+    “follow_up_question”: “What happens if you don’t remove punctuation before splitting the text?”
+    },
+    {
+    “misconception”: “Uninitialized dictionary keys causing runtime errors.”,
+    “related_error_categories”: [“Missing Key Concepts”, “Poor Code Organization”],
+    “occurrence_count”: 7,
+    “occurrence_percentage”: “25.00%”,
+    “explanation_diagnostic”: “Some students directly increment dictionary values without initializing them first, which will cause errors.”,
+    “example_code_error”: [“counts[word] += 1  # without prior initialization”],
+    “student_ids”: [79, 109],
+    “suggested_explanation_for_students”: “Before adding to a word count, check whether the word is already in the dictionary. If not, initialize it to 0 first.”,
+    “correct_approach_hint”: [“if word in counts:”, “    counts[word] += 1”, “else:”, “    counts[word] = 1”],
+    “follow_up_question”: “What happens if you try to increment a key in a dictionary that doesn’t exist yet?”
+    }
+    ]
+    }
+    } ￼

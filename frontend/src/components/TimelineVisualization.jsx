@@ -17,6 +17,23 @@ import Prism from 'prismjs';
 import 'prismjs/themes/prism.css';
 import 'prismjs/components/prism-python';
 
+// Create a custom icon for correct submissions
+const correctSubmissionIcon = new Image(16, 16);
+const correctSubmissionColor = '#332288';
+// const correctSubmissionColor = '#22c55e'
+const incorrectSubmissionColor = '#EE7733'
+const svgString = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" fill="none" stroke="${correctSubmissionColor}" stroke-width="2" rx="2" ry="2"/><path d="M4 8.5l2.5 2.5L12 5.5" stroke="${correctSubmissionColor}" stroke-width="2" fill="none"/></svg>`;
+if (typeof window !== 'undefined') {
+  correctSubmissionIcon.src = 'data:image/svg+xml;base64,' + window.btoa(svgString.trim());
+}
+
+// Create a custom icon for incorrect submissions
+const incorrectSubmissionIcon = new Image(16, 16);
+const incorrectSvgString = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" fill="none" stroke="${incorrectSubmissionColor}" stroke-width="2" rx="2" ry="2"/><path d="M5 5l6 6M11 5l-6 6" stroke="${incorrectSubmissionColor}" stroke-width="2" fill="none"/></svg>`;
+if (typeof window !== 'undefined') {
+  incorrectSubmissionIcon.src = 'data:image/svg+xml;base64,' + window.btoa(incorrectSvgString.trim());
+}
+
 // Register required Chart.js components
 ChartJS.register(
   LinearScale,
@@ -341,7 +358,15 @@ const TimelineVisualization = ({
           }
         }),
         pointRadius: 8,
-        pointStyle: 'rect'
+        pointStyle: chartData.submissionDataset.map(item => {
+          if (item.performance === 'Correct') {
+            return correctSubmissionIcon;
+          }
+          if (item.performance === 'Incorrect') {
+            return incorrectSubmissionIcon;
+          }
+          return 'rect';
+        })
       }
     ];
     
@@ -357,7 +382,7 @@ const TimelineVisualization = ({
         backgroundColor: 'transparent',
         borderColor: 'rgba(107, 114, 128, 0.3)',
         borderWidth: 1,
-        tension: 0,
+       tension: 0,
         pointRadius: 0,
         pointHoverRadius: 0
       });
@@ -496,8 +521,9 @@ const TimelineVisualization = ({
           <div style={{
             width: '12px',
             height: '12px',
-            backgroundColor: '#22c55e',
-            marginRight: '8px'
+            marginRight: '8px',
+            backgroundImage: `url(${correctSubmissionIcon.src})`,
+            backgroundSize: 'cover'
           }}></div>
           <span>Correct Submission</span>
         </div>
@@ -505,8 +531,9 @@ const TimelineVisualization = ({
           <div style={{
             width: '12px',
             height: '12px',
-            backgroundColor: '#ef4444',
-            marginRight: '8px'
+            marginRight: '8px',
+            backgroundImage: `url(${incorrectSubmissionIcon.src})`,
+            backgroundSize: 'cover'
           }}></div>
           <span>Incorrect Submission</span>
         </div>

@@ -1,0 +1,871 @@
+{
+  "analysisData": {
+    "aggregate_analysis": {
+      "top_errors": [
+        {
+          "category": "Initialization Error",
+          "occurrence_count": 7,
+          "occurrence_percentage": "25.00%",
+          "description": "The code initializes data structures (dictionaries, lists) incorrectly or not at all, preventing proper counting.",
+          "example_code": [
+            "def word_count(text):",
+            "    words = text.split()",
+            "    counts = [] # Should be a dictionary",
+            "    for word in words:"
+          ],
+          "student_ids": [
+            73,
+            82,
+            71,
+            101,
+            78,
+            75,
+            107
+          ]
+        },
+        {
+          "category": "Logic Error",
+          "occurrence_count": 3,
+          "occurrence_percentage": "10.71%",
+          "description": "The code contains flawed logic in the counting mechanism, such as using the length of a word instead of counting its occurrences.",
+          "example_code": [
+            "def word_count(text):",
+            "  counts = {}",
+            "  for word in text.split(' '):",
+            "    counts[word] = len(word) # count is length?"
+          ],
+          "student_ids": [
+            89,
+            88,
+            74
+          ]
+        },
+        {
+          "category": "Function/Method Error",
+          "occurrence_count": 2,
+          "occurrence_percentage": "7.14%",
+          "description": "The student demonstrates issues with function definition, specifically calling it by the wrong name. ",
+          "example_code": [
+            "def word_counter(text):",
+            "    word_list = text.split()",
+            "    the_dict = {}"
+          ],
+          "student_ids": [
+            75,
+            86
+          ]
+        },
+        {
+          "category": "Misinterpretation of Problem",
+          "occurrence_count": 2,
+          "occurrence_percentage": "7.14%",
+          "description": "The student misinterprets the problem by attempting to count characters instead of words.",
+          "example_code": [
+            "def count_chars(text):",
+            "    # count each character",
+            "    char_counts = {}",
+            "    for char in text:"
+          ],
+          "student_ids": [
+            108,
+            78
+          ]
+        },
+        {
+          "category": "Requirement Violation",
+          "occurrence_count": 3,
+          "occurrence_percentage": "10.71%",
+          "description": "The code contains placeholder `pass` statements, indicating incomplete or missing implementation.",
+          "example_code": [
+            "def word_count(text):",
+            "  pass"
+          ],
+          "student_ids": [
+            104,
+            106,
+            79
+          ]
+        }
+      ],
+      "error_correlations": [
+        {
+          "correlated_errors": [
+            "Initialization Error",
+            "Logic Error"
+          ],
+          "correlation_count": 1,
+          "correlation_percentage": "3.57%",
+          "hypothesis": "Students who initialize data structures incorrectly are also prone to making logical errors in their counting algorithms.",
+          "example_code": [
+            "def word_count(text):",
+            "  counts = {}",
+            "  for word in text.split(' '):",
+            "    counts[word] = len(word) # count is length?"
+          ],
+          "student_ids": [
+            88
+          ]
+        },
+        {
+          "correlated_errors": [
+            "Requirement Violation",
+            "Initialization Error"
+          ],
+          "correlation_count": 0,
+          "correlation_percentage": "0.00%",
+          "hypothesis": "Students who have incomplete or empty method bodies tend to forget to initialize key data structures and thus have issues with counting.",
+          "example_code": [],
+          "student_ids": []
+        },
+        {
+          "correlated_errors": [
+            "Function/Method Error",
+            "Initialization Error"
+          ],
+          "correlation_count": 1,
+          "correlation_percentage": "3.57%",
+          "hypothesis": "Students who are have difficulty correctly defining methods, have trouble correctly initializing data structures inside of them.",
+          "example_code": [
+            "def word_counter(text):",
+            "    word_list = text.split()",
+            "    the_dict = {}"
+          ],
+          "student_ids": [
+            75
+          ]
+        }
+      ],
+      "potential_misconceptions": [
+        {
+          "misconception": "Confusing lists and dictionaries for storing counts.",
+          "related_error_categories": [
+            "Initialization Error",
+            "Data Structure Error"
+          ],
+          "occurrence_count": 3,
+          "occurrence_percentage": "10.71%",
+          "explanation_diagnostic": "Students may not understand the fundamental difference between lists and dictionaries, leading them to use lists when a dictionary is more appropriate for key-value pairs (word-count).",
+          "example_code_error": [
+            "def word_count(text):",
+            "    words = text.split()",
+            "    counts = [] # Using a list instead of a dictionary"
+          ],
+          "student_ids": [
+            73,
+            107
+          ],
+          "suggested_explanation_for_students": "Dictionaries are used for storing counts of things because they allow you to associate each word (the key) with its count (the value). Lists are ordered collections, and you need to efficiently look up the count by the word itself.",
+          "correct_code_example": [
+            "def word_count(text):",
+            "    counts = {}",
+            "    for word in text.split():",
+            "        counts[word] = counts.get(word, 0) + 1"
+          ],
+          "follow_up_question": "Why is a dictionary more suitable for storing word counts than a list?"
+        },
+        {
+          "misconception": "Incorrectly counting by length of word rather than frequency.",
+          "related_error_categories": [
+            "Logic Error"
+          ],
+          "occurrence_count": 1,
+          "occurrence_percentage": "3.57%",
+          "explanation_diagnostic": "Student is confused about what is to be counted, and is incorrectly counting the number of letters in the string.",
+          "example_code_error": [
+            "def word_count(text):",
+            "    counts = {}",
+            "    for word in text.split(' '):",
+            "        counts[word] = len(word) # count is length?"
+          ],
+          "student_ids": [
+            88
+          ],
+          "suggested_explanation_for_students": "You are counting how many times a word appears, not how many letters appear in the word. Make sure that you are counting the occurence, not the length.",
+          "correct_code_example": [
+            "def word_count(text):",
+            "    counts = {}",
+            "    for word in text.split():",
+            "        counts[word] = counts.get(word, 0) + 1"
+          ],
+          "follow_up_question": "What's the difference between the number of times a word occurs, and the number of letters in the word?"
+        },
+        {
+          "misconception": "Forgetting to return the result",
+          "related_error_categories": [
+            "Logic Error"
+          ],
+          "occurrence_count": 0,
+          "occurrence_percentage": "0.00%",
+          "explanation_diagnostic": "Students create the word count dictionary but neglect to return it, leading to an empty result.",
+          "example_code_error": [
+            "def word_count(text):",
+            "    words = text.split()",
+            "    counts = {}",
+            "    for word in words:",
+            "        if word in counts:",
+            "            counts[word] += 1",
+            "        else:",
+            "            counts[word] = 1"
+          ],
+          "student_ids": [],
+          "suggested_explanation_for_students": "Make sure you actually return the dictionary you've created. The last line of your function should be `return counts`.",
+          "correct_code_example": [
+            "def word_count(text):",
+            "    words = text.split()",
+            "    counts = {}",
+            "    for word in words:",
+            "        counts[word] = counts.get(word, 0) + 1",
+            "    return counts"
+          ],
+          "follow_up_question": "Why must we use the `return` statement in a function?"
+        }
+      ]
+    },
+    "individual_assessment": [
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 73
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 110
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 82
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 71
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 75
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 108
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 101
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 84
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 78
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 102
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 81
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 77
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 89
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 104
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 106
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 72
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 103
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 105
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 86
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 76
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 74
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 85
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 70
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 107
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 109
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 88
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 80
+      },
+      {
+        "performance_level": "NotAssessed",
+        "student_id": 79
+      }
+    ],
+    "isEnable": true,
+    "overall_assessment": {
+      "performance_distribution": {
+        "correct": {
+          "count": 0,
+          "percentage": "0.00%"
+        },
+        "incorrect": {
+          "count": 0,
+          "percentage": "0.00%"
+        },
+        "not_assessed": {
+          "count": 28,
+          "percentage": "100.00%"
+        }
+      },
+      "total_entries": 28
+    },
+    "problem_summary": {
+      "title": "Word Count"
+    }
+  },
+  "codeSnapshots": {
+    "entries": [
+      {
+        "content": "def word_count(text):\n  pass",
+        "grade": "",
+        "snapshot_id": 56,
+        "student_id": 72,
+        "timestamp": "2024-10-26 14:00:30"
+      },
+      {
+        "content": "def word_count(text):\n    pass",
+        "grade": "",
+        "snapshot_id": 1,
+        "student_id": 101,
+        "timestamp": "2024-10-26 14:00:30"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()",
+        "grade": "",
+        "snapshot_id": 2,
+        "student_id": 103,
+        "timestamp": "2024-10-26 14:00:30"
+      },
+      {
+        "content": "def word_count(text):\n    pass",
+        "grade": "",
+        "snapshot_id": 1,
+        "student_id": 80,
+        "timestamp": "2024-10-26 14:00:35"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()",
+        "grade": "",
+        "snapshot_id": 2,
+        "student_id": 82,
+        "timestamp": "2024-10-26 14:00:42"
+      },
+      {
+        "content": "def word_count(text):\n    pass",
+        "grade": "",
+        "snapshot_id": 1,
+        "student_id": 70,
+        "timestamp": "2024-10-26 14:00:45"
+      },
+      {
+        "content": "def word_count(text):\n    pass",
+        "grade": "",
+        "snapshot_id": 76,
+        "student_id": 73,
+        "timestamp": "2024-10-26 14:00:45"
+      },
+      {
+        "content": "def word_count(text):",
+        "grade": "",
+        "snapshot_id": 3,
+        "student_id": 105,
+        "timestamp": "2024-10-26 14:00:45"
+      },
+      {
+        "content": "def word_count(text):\n    counts = []",
+        "grade": "",
+        "snapshot_id": 4,
+        "student_id": 107,
+        "timestamp": "2024-10-26 14:00:45"
+      },
+      {
+        "content": "def word_count(text):\n    counts = {}",
+        "grade": "",
+        "snapshot_id": 5,
+        "student_id": 109,
+        "timestamp": "2024-10-26 14:00:45"
+      },
+      {
+        "content": "def word_count(text):\n  words = []",
+        "grade": "",
+        "snapshot_id": 3,
+        "student_id": 88,
+        "timestamp": "2024-10-26 14:00:48"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    counts = {}",
+        "grade": "",
+        "snapshot_id": 4,
+        "student_id": 80,
+        "timestamp": "2024-10-26 14:00:50"
+      },
+      {
+        "content": "def count_words(txt):\n    pass",
+        "grade": "",
+        "snapshot_id": 5,
+        "student_id": 84,
+        "timestamp": "2024-10-26 14:00:55"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    ",
+        "grade": "",
+        "snapshot_id": 2,
+        "student_id": 70,
+        "timestamp": "2024-10-26 14:01:00"
+      },
+      {
+        "content": "def count_words(text):\n    pass",
+        "grade": "",
+        "snapshot_id": 32,
+        "student_id": 71,
+        "timestamp": "2024-10-26 14:01:00"
+      },
+      {
+        "content": "def word_count(text):\n  # need to clean text first\n  # lowercase, remove punctuation",
+        "grade": "",
+        "snapshot_id": 57,
+        "student_id": 72,
+        "timestamp": "2024-10-26 14:01:00"
+      },
+      {
+        "content": "def word_count(text):\n    # okay, need a dictionary\n    counts = {}",
+        "grade": "",
+        "snapshot_id": 77,
+        "student_id": 73,
+        "timestamp": "2024-10-26 14:01:00"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()",
+        "grade": "",
+        "snapshot_id": 126,
+        "student_id": 76,
+        "timestamp": "2024-10-26 14:01:00"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    counts = {}",
+        "grade": "",
+        "snapshot_id": 6,
+        "student_id": 102,
+        "timestamp": "2024-10-26 14:01:00"
+      },
+      {
+        "content": "def word_count(text):\n    # how to count?",
+        "grade": "",
+        "snapshot_id": 7,
+        "student_id": 110,
+        "timestamp": "2024-10-26 14:01:00"
+      },
+      {
+        "content": "def word_counter(text):\n  # split text to words",
+        "grade": "",
+        "snapshot_id": 6,
+        "student_id": 86,
+        "timestamp": "2024-10-26 14:01:02"
+      },
+      {
+        "content": "def word_count(text):\n    text = text.lower()\n    words = text.split()",
+        "grade": "",
+        "snapshot_id": 7,
+        "student_id": 82,
+        "timestamp": "2024-10-26 14:01:03"
+      },
+      {
+        "content": "def word_count(text):\n    counts = {}",
+        "grade": "",
+        "snapshot_id": 8,
+        "student_id": 89,
+        "timestamp": "2024-10-26 14:01:10"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    counts = {}\n    for word in words:",
+        "grade": "",
+        "snapshot_id": 9,
+        "student_id": 80,
+        "timestamp": "2024-10-26 14:01:11"
+      },
+      {
+        "content": "def word_count(text):\n  counts = {}\n  words = text.split(' ')",
+        "grade": "",
+        "snapshot_id": 10,
+        "student_id": 88,
+        "timestamp": "2024-10-26 14:01:13"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    word_counts = {}",
+        "grade": "",
+        "snapshot_id": 3,
+        "student_id": 70,
+        "timestamp": "2024-10-26 14:01:15"
+      },
+      {
+        "content": "def word_count(text):\n    pass",
+        "grade": "",
+        "snapshot_id": 33,
+        "student_id": 71,
+        "timestamp": "2024-10-26 14:01:15"
+      },
+      {
+        "content": "def word_count(text):\n    pass",
+        "grade": "",
+        "snapshot_id": 93,
+        "student_id": 74,
+        "timestamp": "2024-10-26 14:01:15"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    counts = {}",
+        "grade": "",
+        "snapshot_id": 127,
+        "student_id": 76,
+        "timestamp": "2024-10-26 14:01:15"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    counts = {}",
+        "grade": "",
+        "snapshot_id": 8,
+        "student_id": 101,
+        "timestamp": "2024-10-26 14:01:15"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    counts = {}\n    return counts",
+        "grade": "",
+        "snapshot_id": 9,
+        "student_id": 103,
+        "timestamp": "2024-10-26 14:01:15"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()",
+        "grade": "",
+        "snapshot_id": 10,
+        "student_id": 105,
+        "timestamp": "2024-10-26 14:01:15"
+      },
+      {
+        "content": "def word_count(text):\n    text = text.lower()\n    words = text.split()\n    word_counts = {}",
+        "grade": "",
+        "snapshot_id": 11,
+        "student_id": 81,
+        "timestamp": "2024-10-26 14:01:18"
+      },
+      {
+        "content": "def count_words(txt):\n    words = txt.split()",
+        "grade": "",
+        "snapshot_id": 12,
+        "student_id": 84,
+        "timestamp": "2024-10-26 14:01:20"
+      },
+      {
+        "content": "def word_counter(text):\n  words = text.split()\n  counts = {}",
+        "grade": "",
+        "snapshot_id": 13,
+        "student_id": 86,
+        "timestamp": "2024-10-26 14:01:22"
+      },
+      {
+        "content": "def word_count(text):\n    text = text.lower()\n    # remove punctuation somehow\n    words = text.split()\n    word_counts = {}",
+        "grade": "",
+        "snapshot_id": 14,
+        "student_id": 82,
+        "timestamp": "2024-10-26 14:01:25"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    word_counts = {}\n    for word in words:",
+        "grade": "",
+        "snapshot_id": 4,
+        "student_id": 70,
+        "timestamp": "2024-10-26 14:01:30"
+      },
+      {
+        "content": "def word_count(text):\n  # iterate and build new string\n  cleaned_str = \"\"",
+        "grade": "",
+        "snapshot_id": 58,
+        "student_id": 72,
+        "timestamp": "2024-10-26 14:01:30"
+      },
+      {
+        "content": "def word_count(text):\n    # first clean the input string\n    # lowercase and remove punctuation\n    clean_text = text.lower()",
+        "grade": "",
+        "snapshot_id": 78,
+        "student_id": 73,
+        "timestamp": "2024-10-26 14:01:30"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()",
+        "grade": "",
+        "snapshot_id": 94,
+        "student_id": 74,
+        "timestamp": "2024-10-26 14:01:30"
+      },
+      {
+        "content": "def word_counter(text):\n    pass",
+        "grade": "",
+        "snapshot_id": 110,
+        "student_id": 75,
+        "timestamp": "2024-10-26 14:01:30"
+      },
+      {
+        "content": "def count_chars(text):\n    pass",
+        "grade": "",
+        "snapshot_id": 157,
+        "student_id": 78,
+        "timestamp": "2024-10-26 14:01:30"
+      },
+      {
+        "content": "def word_count(text):\n  pass",
+        "grade": "",
+        "snapshot_id": 11,
+        "student_id": 104,
+        "timestamp": "2024-10-26 14:01:30"
+      },
+      {
+        "content": "def count_chars(text):",
+        "grade": "",
+        "snapshot_id": 12,
+        "student_id": 108,
+        "timestamp": "2024-10-26 14:01:30"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    for word in words:\n        pass",
+        "grade": "",
+        "snapshot_id": 13,
+        "student_id": 109,
+        "timestamp": "2024-10-26 14:01:30"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    counts = {}\n    for word in words:\n        if word in counts:\n            counts[word] += 1\n        else:\n            counts[word] = 1",
+        "grade": "",
+        "snapshot_id": 15,
+        "student_id": 80,
+        "timestamp": "2024-10-26 14:01:31"
+      },
+      {
+        "content": "def word_count(text):\n    counts = {}\n    for word in text.split():\n        counts[word] += 1 # this might be wrong",
+        "grade": "",
+        "snapshot_id": 16,
+        "student_id": 89,
+        "timestamp": "2024-10-26 14:01:33"
+      },
+      {
+        "content": "def count_words(txt):\n    words = txt.split()\n    result = {}",
+        "grade": "",
+        "snapshot_id": 17,
+        "student_id": 85,
+        "timestamp": "2024-10-26 14:01:38"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    word_counts = {}\n    for word in words:\n        # how to count?",
+        "grade": "",
+        "snapshot_id": 5,
+        "student_id": 70,
+        "timestamp": "2024-10-26 14:01:45"
+      },
+      {
+        "content": "def word_count(text):\n    # step 1: split string into words\n    words = text.split()",
+        "grade": "",
+        "snapshot_id": 34,
+        "student_id": 71,
+        "timestamp": "2024-10-26 14:01:45"
+      },
+      {
+        "content": "def word_count(text):\n  cleaned_str = \"\"\n  for char in text.lower():",
+        "grade": "",
+        "snapshot_id": 59,
+        "student_id": 72,
+        "timestamp": "2024-10-26 14:01:45"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    counts = {}",
+        "grade": "",
+        "snapshot_id": 95,
+        "student_id": 74,
+        "timestamp": "2024-10-26 14:01:45"
+      },
+      {
+        "content": "def word_counter(text):\n    word_list = text.split()",
+        "grade": "",
+        "snapshot_id": 111,
+        "student_id": 75,
+        "timestamp": "2024-10-26 14:01:45"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    counts = {}\n    for word in words:\n        if word in counts:\n            counts[word] += 1\n        else:\n            counts[word] = 1",
+        "grade": "",
+        "snapshot_id": 128,
+        "student_id": 76,
+        "timestamp": "2024-10-26 14:01:45"
+      },
+      {
+        "content": "def word_count(text):\n  # step 1: make it all one case\n  lower_text = text.lower()",
+        "grade": "",
+        "snapshot_id": 142,
+        "student_id": 77,
+        "timestamp": "2024-10-26 14:01:45"
+      },
+      {
+        "content": "def word_count(text):\n    text = text.lower()\n    # remove punctuation somehow\n    clean_text = text.replace('.', '')\n    words = clean_text.split()\n    word_counts = {}",
+        "grade": "",
+        "snapshot_id": 18,
+        "student_id": 82,
+        "timestamp": "2024-10-26 14:01:45"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    for word in words:\n        pass",
+        "grade": "",
+        "snapshot_id": 14,
+        "student_id": 106,
+        "timestamp": "2024-10-26 14:01:45"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    counts = []\n    for word in words:",
+        "grade": "",
+        "snapshot_id": 15,
+        "student_id": 107,
+        "timestamp": "2024-10-26 14:01:45"
+      },
+      {
+        "content": "def word_count(text):\n  counts = {}\n  for word in text.split(' '):\n    counts[word] = len(word) # count is length?",
+        "grade": "",
+        "snapshot_id": 19,
+        "student_id": 88,
+        "timestamp": "2024-10-26 14:01:46"
+      },
+      {
+        "content": "def count_words(txt):\n    words = txt.split()\n    result = {}\n    for word in words:\n        if word in result:\n            result[word] += 1\n        else:\n            result[word] = 1",
+        "grade": "",
+        "snapshot_id": 20,
+        "student_id": 84,
+        "timestamp": "2024-10-26 14:01:48"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    counts = {}\n    for word in words:\n        if word in counts:\n            counts[word] += 1\n        else:\n            counts[word] = 1\n    return counts",
+        "grade": "",
+        "snapshot_id": 21,
+        "student_id": 80,
+        "timestamp": "2024-10-26 14:01:50"
+      },
+      {
+        "content": "def word_counter(text):\n  words = text.split()\n  counts = {}\n  for w in words:\n      counts[w] = counts.get(w, 0) + 1",
+        "grade": "",
+        "snapshot_id": 22,
+        "student_id": 86,
+        "timestamp": "2024-10-26 14:01:52"
+      },
+      {
+        "content": "def word_count(text):\n    text = text.lower()\n    words = text.split()\n    word_counts = {}\n    for w in words:\n        if w in word_counts:\n            word_counts[w] += 1\n        else:\n            word_counts[w] = 1",
+        "grade": "",
+        "snapshot_id": 23,
+        "student_id": 81,
+        "timestamp": "2024-10-26 14:01:55"
+      },
+      {
+        "content": "def word_count(text):\n    # step 1: split string into words\n    words = text.split()\n    # step 2: create a dictionary to store counts\n    counts = {}",
+        "grade": "",
+        "snapshot_id": 35,
+        "student_id": 71,
+        "timestamp": "2024-10-26 14:02:00"
+      },
+      {
+        "content": "def word_count(text):\n    clean_text = text.lower()\n    # how to remove all punctuation?\n    # loop and replace seems best\n    punctuation = '.,!?'",
+        "grade": "",
+        "snapshot_id": 79,
+        "student_id": 73,
+        "timestamp": "2024-10-26 14:02:00"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    counts = {}\n    for word in words:",
+        "grade": "",
+        "snapshot_id": 96,
+        "student_id": 74,
+        "timestamp": "2024-10-26 14:02:00"
+      },
+      {
+        "content": "def word_counter(text):\n    word_list = text.split()\n    the_dict = {}",
+        "grade": "",
+        "snapshot_id": 112,
+        "student_id": 75,
+        "timestamp": "2024-10-26 14:02:00"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    counts = {}\n    for word in words:\n        if word in counts:\n            counts[word] += 1\n        else:\n            counts[word] = 1\n    return counts",
+        "grade": "",
+        "snapshot_id": 129,
+        "student_id": 76,
+        "timestamp": "2024-10-26 14:02:00"
+      },
+      {
+        "content": "def count_chars(text):\n    # count each character\n    char_counts = {}\n    for char in text:",
+        "grade": "",
+        "snapshot_id": 158,
+        "student_id": 78,
+        "timestamp": "2024-10-26 14:02:00"
+      },
+      {
+        "content": "def word_count(text)\n    pass",
+        "grade": "",
+        "snapshot_id": 177,
+        "student_id": 79,
+        "timestamp": "2024-10-26 14:02:00"
+      },
+      {
+        "content": "def word_count(text):\n    words = text.split()\n    counts = {}\n    for word in words:",
+        "grade": "",
+        "snapshot_id": 16,
+        "student_id": 102,
+        "timestamp": "2024-10-26 14:02:00"
+      }
+    ]
+  },
+  "problemDescription": {
+    "problem_description": "Write a function that takes a string text and returns a dictionary (or hash map) where the keys are words in the string, and the values are the number of times each word appears.",
+    "timestamp": "2024-10-26 14:00:00"
+  },
+  "submissionTimes": {
+    "submission_times": []
+  },
+  "taInterventions": {
+    "interventions": []
+  }
+}

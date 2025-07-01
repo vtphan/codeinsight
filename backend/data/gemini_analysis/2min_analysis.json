@@ -1,0 +1,156 @@
+{
+    "aggregate_analysis": {
+      "top_errors": [
+        {
+          "category": "Flawed Loop/Update Logic",
+          "occurrence_count": 5,
+          "occurrence_percentage": 17.86,
+          "description": "Students have set up the main loop but are struggling with the logic for updating word counts in the dictionary. This includes not knowing how to handle the first occurrence of a word, which can lead to a KeyError, or returning before the loop completes.",
+          "example_code": "def word_count(text):\n    counts = {}\n    for word in text.split():\n        counts[word] += 1 # this might be wrong",
+          "student_ids": [
+            70,
+            74,
+            89,
+            102,
+            103
+          ]
+        },
+        {
+          "category": "Pre-occupation with Text Cleaning",
+          "occurrence_count": 4,
+          "occurrence_percentage": 14.29,
+          "description": "Students are focusing on secondary problem aspects like converting to lowercase or removing punctuation before implementing the core word counting algorithm. This suggests they may be avoiding the main logical challenge.",
+          "example_code": "def word_count(text):\n    clean_text = text.lower()\n    # how to remove all punctuation?\n    # loop and replace seems best",
+          "student_ids": [
+            72,
+            73,
+            77,
+            82
+          ]
+        },
+        {
+          "category": "No Meaningful Progress",
+          "occurrence_count": 4,
+          "occurrence_percentage": 14.29,
+          "description": "Students have created the function definition but have not written any significant logic. They may be unsure how to start the problem.",
+          "example_code": "def word_count(text):\n  pass",
+          "student_ids": [
+            79,
+            104,
+            105,
+            110
+          ]
+        },
+        {
+          "category": "Misinterpretation of Problem",
+          "occurrence_count": 3,
+          "occurrence_percentage": 10.71,
+          "description": "The student's code indicates they are solving a different problem, such as counting characters in the text or finding the length of each word, instead of word frequency.",
+          "example_code": "def word_count(text):\n  counts = {}\n  for word in text.split(' '):\n    counts[word] = len(word) # count is length?",
+          "student_ids": [
+            78,
+            88,
+            108
+          ]
+        },
+        {
+          "category": "Inappropriate Data Structure",
+          "occurrence_count": 3,
+          "occurrence_percentage": 10.71,
+          "description": "Students are using a data structure not suited for storing key-value pairs, such as a list, or have not initialized any data structure to store the counts.",
+          "example_code": "def word_count(text):\n    words = text.split()\n    counts = []\n    for word in words:",
+          "student_ids": [
+            106,
+            107,
+            109
+          ]
+        }
+      ],
+      "error_correlations": [
+        {
+          "correlated_errors": [
+            "Inappropriate Data Structure",
+            "Flawed Loop/Update Logic"
+          ],
+          "hypothesis": "Students who choose the wrong data structure (e.g., a list) for counting are likely to develop flawed loop logic because the methods available for that structure do not match the task of frequency mapping."
+        },
+        {
+          "correlated_errors": [
+            "Pre-occupation with Text Cleaning",
+            "Flawed Loop/Update Logic"
+          ],
+          "hypothesis": "Students may focus on secondary concerns like text cleaning as a way to procrastinate on or because they are uncertain about the more abstract task of implementing the counting algorithm. This suggests the core logic is the primary hurdle."
+        },
+        {
+          "correlated_errors": [
+            "No Meaningful Progress",
+            "Misinterpretation of Problem"
+          ],
+          "hypothesis": "Students who are stuck and unsure how to begin (No Meaningful Progress) might guess the problem's goal, leading them to implement a familiar but incorrect algorithm (Misinterpretation of Problem) like counting characters."
+        }
+      ],
+      "potential_misconceptions": [
+        {
+          "misconception": "Uncertainty about how to use a dictionary to accumulate counts.",
+          "related_error_categories": [
+            "Flawed Loop/Update Logic",
+            "Inappropriate Data Structure"
+          ],
+          "occurrence_count": 8,
+          "occurrence_percentage": 28.57,
+          "explanation_diagnostic": "This is the most common core challenge. Students understand the need to loop through words but do not know the standard dictionary pattern for counting: check if a key exists, then either initialize it or increment its existing value. This leads to `KeyError` bugs, using the wrong data structure, or getting stuck.",
+          "example_code_error": "def word_count(text):\n    counts = {}\n    for word in text.split():\n        counts[word] += 1 # this might be wrong",
+          "student_ids": [
+            70,
+            74,
+            89,
+            102,
+            103,
+            106,
+            107,
+            109
+          ],
+          "suggested_explanation_for_students": "You're on the right track with looping through the words! Now, let's think about the dictionary. For each word, there are two possibilities: you've either seen it before, or it's the first time. How do you handle each case differently inside your loop?",
+          "correct_code_example": "if word in word_counts:\n    # what to do if we've seen it before?\nelse:\n    # what to do for a new word?",
+          "follow_up_question": "How can you check if a word is already a key in your dictionary?"
+        },
+        {
+          "misconception": "Solving a simpler version of the problem (e.g., word length) instead of word frequency.",
+          "related_error_categories": [
+            "Misinterpretation of Problem"
+          ],
+          "occurrence_count": 3,
+          "occurrence_percentage": 10.71,
+          "explanation_diagnostic": "The student has misinterpreted the word 'count' in the problem description. Instead of counting the occurrences (frequency) of each word, they are counting something else, like the number of characters in each word or the total characters in the string.",
+          "example_code_error": "def word_count(text):\n  counts = {}\n  for word in text.split(' '):\n    counts[word] = len(word) # count is length?",
+          "student_ids": [
+            78,
+            88,
+            108
+          ],
+          "suggested_explanation_for_students": "Good start on processing each word! Let's re-read the goal. The function should return how many *times* each word appears. For example, in the text 'a dog is a good dog', how many times does the word 'dog' appear?",
+          "correct_code_example": "# For 'cat dog cat', the final dictionary should be:\n# {'cat': 2, 'dog': 1}",
+          "follow_up_question": "If your program sees the word 'cat' for the first time, what should its count in the dictionary be?"
+        },
+        {
+          "misconception": "Focusing on edge cases (cleaning) before solving the core problem.",
+          "related_error_categories": [
+            "Pre-occupation with Text Cleaning"
+          ],
+          "occurrence_count": 4,
+          "occurrence_percentage": 14.29,
+          "explanation_diagnostic": "The student correctly identifies that punctuation and capitalization matter for a robust solution, but they get stuck on this pre-processing step instead of first building the main counting logic. This is a common planning mistake where a sub-problem blocks progress on the main goal.",
+          "example_code_error": "def word_count(text):\n    clean_text = text.lower()\n    # how to remove all punctuation?\n    # loop and replace seems best",
+          "student_ids": [
+            72,
+            73,
+            77,
+            82
+          ],
+          "suggested_explanation_for_students": "It's a great insight that punctuation and capitalization will affect the word counts! That's an important part of a full solution. Could you try solving a simpler version first? For example, can you make your function work for a simple string like 'apple ball apple' that has no caps or punctuation?",
+          "correct_code_example": "# First, let's make it work for this:\ntext = 'one fish two fish'\n# Then, we can worry about this:\ntext = 'One fish, two fish.'",
+          "follow_up_question": "Once you have the basic counting working, where in your code would be the best place to add the logic for handling capitalization?"
+        }
+      ]
+    }
+  }

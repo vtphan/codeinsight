@@ -33,12 +33,15 @@ func main() {
 
 	// API route
 	http.HandleFunc("/api/data", handleMergedData)
-
 	// Static frontend under /dashboard
+	http.Handle("/dashboard/2minutes", http.StripPrefix("/dashboard", http.HandlerFunc(dashboardHandler2Minutes)))
+	http.Handle("/dashboard/4minutes", http.StripPrefix("/dashboard", http.HandlerFunc(dashboardHandler4Minutes)))
+	http.Handle("/dashboard/6minutes", http.StripPrefix("/dashboard", http.HandlerFunc(dashboardHandler6Minutes)))
 	http.Handle("/dashboard/", http.StripPrefix("/dashboard", http.HandlerFunc(dashboardHandler)))
+	http.HandleFunc("/", dashboardHandler)
 
-	log.Println("🚀 Server running at http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Println("🚀 Server running at http://localhost:7070")
+	log.Fatal(http.ListenAndServe(":7070", nil))
 }
 
 // loadEnv loads environment variables from .env file
@@ -85,6 +88,44 @@ func dashboardHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./dist/index.html")
 }
 
+func dashboardHandler2Minutes(w http.ResponseWriter, r *http.Request) {
+	requestPath := "./dist" + r.URL.Path
+
+	// If the file exists, serve it
+	if stat, err := os.Stat(requestPath); err == nil && !stat.IsDir() {
+		http.ServeFile(w, r, requestPath)
+		return
+	}
+	// Otherwise serve index.html for SPA routing
+	http.ServeFile(w, r, "./dist/index2.html")
+
+}
+
+func dashboardHandler4Minutes(w http.ResponseWriter, r *http.Request) {
+	requestPath := "./dist" + r.URL.Path
+
+	// If the file exists, serve it
+	if stat, err := os.Stat(requestPath); err == nil && !stat.IsDir() {
+		http.ServeFile(w, r, requestPath)
+		return
+	}
+	// Otherwise serve index.html for SPA routing
+	http.ServeFile(w, r, "./dist/index4.html")
+
+}
+
+func dashboardHandler6Minutes(w http.ResponseWriter, r *http.Request) {
+	requestPath := "./dist" + r.URL.Path
+
+	// If the file exists, serve it
+	if stat, err := os.Stat(requestPath); err == nil && !stat.IsDir() {
+		http.ServeFile(w, r, requestPath)
+		return
+	}
+	// Otherwise serve index.html for SPA routing
+	http.ServeFile(w, r, "./dist/index6.html")
+}
+
 func handleMergedData(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
@@ -107,17 +148,32 @@ func handleMergedData(w http.ResponseWriter, r *http.Request) {
 		log.Println("AI analysis completed and saved to data.json")
 	}
 
-	// Always read and return the data.json file (whether updated or not)
-	data, err := os.ReadFile("data/data.json")
+	// Get the minutes parameter to determine which data file to serve
+	minutes := r.URL.Query().Get("minutes")
+	var dataFile string
+
+	switch minutes {
+	case "2":
+		dataFile = "data/data2.json"
+	case "4":
+		dataFile = "data/data4.json"
+	case "6":
+		dataFile = "data/data6.json"
+	default:
+		dataFile = "data/data_final.json"
+	}
+
+	// Always read and return the appropriate data file (whether updated or not)
+	data, err := os.ReadFile(dataFile)
 	if err != nil {
-		http.Error(w, "Failed to read data/data.json", http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Failed to read %s", dataFile), http.StatusInternalServerError)
 		return
 	}
 
 	// Parse the JSON to ensure it's valid
 	var parsed interface{}
 	if err := json.Unmarshal(data, &parsed); err != nil {
-		http.Error(w, "Invalid JSON in data/data.json", http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Invalid JSON in %s", dataFile), http.StatusInternalServerError)
 		return
 	}
 

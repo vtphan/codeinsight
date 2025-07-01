@@ -20,12 +20,32 @@ const StudentSubmission = ({ studentSubmissions, submissionTimes, studentId, hel
     }, null);
 
   // Find the snapshot that matches the submission timestamp
-  const snapshot = submission 
-    ? studentSubmissions?.entries?.find(
-        entry => entry.student_id === studentId && 
-                new Date(entry.timestamp).getTime() === new Date(submission.timestamp).getTime()
-      )
-    : null;
+  // If exact match fails, fall back to any available snapshot for the student
+  let snapshot = null;
+  
+  if (submission && studentSubmissions?.entries) {
+    // First, try to find exact timestamp match
+    snapshot = studentSubmissions.entries.find(
+      entry => entry.student_id === studentId && 
+              new Date(entry.timestamp).getTime() === new Date(submission.timestamp).getTime()
+    );
+    
+    // If no exact match, find any snapshot for this student (prefer latest)
+    if (!snapshot) {
+      const studentSnapshots = studentSubmissions.entries
+        .filter(entry => entry.student_id === studentId)
+        .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      
+      snapshot = studentSnapshots[0]; // Get the latest snapshot
+    }
+  } else if (studentSubmissions?.entries) {
+    // If no submission data, just find any snapshot for this student
+    const studentSnapshots = studentSubmissions.entries
+      .filter(entry => entry.student_id === studentId)
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    snapshot = studentSnapshots[0];
+  }
 
   const problemID = new URLSearchParams(window.location.search).get("problem_id");
 
